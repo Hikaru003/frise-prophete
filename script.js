@@ -1,16 +1,13 @@
-﻿const timeline = document.getElementById('timeline');
+const timeline = document.getElementById('timeline');
 const timelineContainer = document.getElementById('timeline-container');
-
 const modal = document.getElementById('modal');
 const modalTitle = document.getElementById('modal-title');
 const modalSubtitle = document.getElementById('modal-subtitle');
 const modalText = document.getElementById('modal-text');
 const closeModal = document.getElementById('close-modal');
-
 const tooltipCard = document.getElementById('tooltip-card');
 const tooltipCardTitle = document.getElementById('tooltip-card-title');
 const tooltipCardText = document.getElementById('tooltip-card-text');
-
 const resetViewButton = document.getElementById('reset-view');
 const backButton = document.getElementById('back-button');
 
@@ -19,16 +16,18 @@ const POINT_FOCUS_ZOOM = 2.6;
 const MIN_PERIOD_ZOOM = 1.35;
 const MAX_PERIOD_ZOOM = 2.4;
 const ANIMATION_DURATION = 340;
+
 const HIGHLIGHTED_START_YEAR = -53;
 const HIGHLIGHTED_HIJRA_YEAR = 1;
+const PRIORITY_GRADUATION_YEARS = new Set([-53, 1, 11]);
 
 const SIDE_PADDING_PERCENT = 6;
-
 const BASE_TIMELINE_HEIGHT = 440;
 const ROOT_EVENT_TOP = 138;
 const LEVEL_GAP = 92;
 const LANE_GAP = 52;
 const COLLISION_THRESHOLD_PERCENT = 10;
+const GRADUATION_LABEL_COLLISION_PADDING = 4;
 const PERIOD_SAME_LANE_GAP_PERCENT = 1.4;
 const PERIOD_MIN_YEAR_GAP_FOR_SAME_LANE = 1;
 const TIMELINE_BOTTOM_PADDING = 96;
@@ -51,17 +50,9 @@ function getTimelineBoundaryYears() {
     const years = [];
 
     eventsData.forEach(event => {
-        if (typeof event.year === 'number') {
-            years.push(event.year);
-        }
-
-        if (typeof event.start === 'number') {
-            years.push(event.start);
-        }
-
-        if (typeof event.end === 'number') {
-            years.push(event.end);
-        }
+        if (typeof event.year === 'number') years.push(event.year);
+        if (typeof event.start === 'number') years.push(event.start);
+        if (typeof event.end === 'number') years.push(event.end);
     });
 
     return {
@@ -76,7 +67,6 @@ function formatTimelineYear(year) {
     if (year < 0) {
         return `${Math.abs(year)} av. H`;
     }
-
     return `${year} H`;
 }
 
@@ -84,7 +74,6 @@ function getTimelineOrdinalYear(year) {
     if (year > 0) {
         return year - 1;
     }
-
     return year;
 }
 
@@ -117,40 +106,37 @@ function positionTooltipCard(x, y) {
 
 function showTooltipCard(termKey, x, y) {
     const entry = glossaryData[termKey];
-
     if (!entry) return;
 
     tooltipCardTitle.textContent = entry.title;
     tooltipCardText.innerHTML = "";
 
-// Texte principal
-if (entry.text) {
-    const paragraphs = entry.text
-        .split(/\n\s*\n/)
-        .map(paragraph => paragraph.trim())
-        .filter(paragraph => paragraph.length > 0);
+    if (entry.text) {
+        const paragraphs = entry.text
+            .split(/\n\s*\n/)
+            .map(paragraph => paragraph.trim())
+            .filter(paragraph => paragraph.length > 0);
 
-    paragraphs.forEach(paragraphText => {
-        const textElement = document.createElement('p');
-        textElement.textContent = paragraphText;
-        tooltipCardText.appendChild(textElement);
-    });
-}
+        paragraphs.forEach(paragraphText => {
+            const textElement = document.createElement('p');
+            textElement.textContent = paragraphText;
+            tooltipCardText.appendChild(textElement);
+        });
+    }
 
-// Liste (si elle existe)
-if (entry.list && Array.isArray(entry.list)) {
-    const ul = document.createElement('ul');
+    if (entry.list && Array.isArray(entry.list)) {
+        const ul = document.createElement('ul');
 
-    entry.list.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        ul.appendChild(li);
-    });
+        entry.list.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            ul.appendChild(li);
+        });
 
-    tooltipCardText.appendChild(ul);
-}
+        tooltipCardText.appendChild(ul);
+    }
+
     tooltipCard.classList.remove('hidden');
-
     positionTooltipCard(x, y);
 }
 
@@ -191,7 +177,6 @@ function appendRichText(paragraphElement, text) {
         }
 
         paragraphElement.appendChild(createInlineTermButton(termKey, label));
-
         lastIndex = matchIndex + fullMatch.length;
     }
 
@@ -289,8 +274,12 @@ function getFamilyRootId(event) {
 }
 
 function yearToPercent(year) {
-    const totalDuration = getTimelineOrdinalYear(TIMELINE_END_YEAR) - getTimelineOrdinalYear(TIMELINE_START_YEAR);
-    const elapsed = getTimelineOrdinalYear(year) - getTimelineOrdinalYear(TIMELINE_START_YEAR);
+    const totalDuration =
+        getTimelineOrdinalYear(TIMELINE_END_YEAR) - getTimelineOrdinalYear(TIMELINE_START_YEAR);
+
+    const elapsed =
+        getTimelineOrdinalYear(year) - getTimelineOrdinalYear(TIMELINE_START_YEAR);
+
     const rawPercent = (elapsed / totalDuration) * 100;
     const usableWidth = 100 - (SIDE_PADDING_PERCENT * 2);
 
@@ -302,26 +291,14 @@ function getEventType(event) {
 }
 
 function getEventStartYear(event) {
-    if (typeof event.start === 'number') {
-        return event.start;
-    }
-
-    if (typeof event.year === 'number') {
-        return event.year;
-    }
-
+    if (typeof event.start === 'number') return event.start;
+    if (typeof event.year === 'number') return event.year;
     return TIMELINE_START_YEAR;
 }
 
 function getEventEndYear(event) {
-    if (typeof event.end === 'number') {
-        return event.end;
-    }
-
-    if (typeof event.year === 'number') {
-        return event.year;
-    }
-
+    if (typeof event.end === 'number') return event.end;
+    if (typeof event.year === 'number') return event.year;
     return getEventStartYear(event);
 }
 
@@ -382,11 +359,9 @@ function computeEventLayout() {
 
     eventsData.forEach(event => {
         const level = getLevel(event);
-
         if (!levelsMap[level]) {
             levelsMap[level] = [];
         }
-
         levelsMap[level].push(event);
     });
 
@@ -409,14 +384,10 @@ function computeEventLayout() {
                 .slice()
                 .sort((a, b) => {
                     const startDiff = getEventStartYear(a) - getEventStartYear(b);
-                    if (startDiff !== 0) {
-                        return startDiff;
-                    }
+                    if (startDiff !== 0) return startDiff;
 
                     const endDiff = getEventEndYear(a) - getEventEndYear(b);
-                    if (endDiff !== 0) {
-                        return endDiff;
-                    }
+                    if (endDiff !== 0) return endDiff;
 
                     return getEventCenterYear(a) - getEventCenterYear(b);
                 });
@@ -429,9 +400,11 @@ function computeEventLayout() {
                 const startPercent = getEventStartPercent(event);
                 const endPercent = getEventEndPercent(event);
                 const centerPercent = getEventCenterPercent(event);
-                const occupiedEndPercent = getEventType(event) === 'period'
-                    ? endPercent + PERIOD_SAME_LANE_GAP_PERCENT
-                    : endPercent;
+
+                const occupiedEndPercent =
+                    getEventType(event) === 'period'
+                        ? endPercent + PERIOD_SAME_LANE_GAP_PERCENT
+                        : endPercent;
 
                 let lane = 0;
 
@@ -494,18 +467,9 @@ function updateTimelineHeight() {
 }
 
 function getGraduationStepForZoom(zoomLevel) {
-    if (zoomLevel >= 2.8) {
-        return 1;
-    }
-
-    if (zoomLevel >= 1.8) {
-        return 2;
-    }
-
-    if (zoomLevel >= 1.3) {
-        return 5;
-    }
-
+    if (zoomLevel >= 2.8) return 1;
+    if (zoomLevel >= 1.8) return 2;
+    if (zoomLevel >= 1.3) return 5;
     return 10;
 }
 
@@ -513,21 +477,21 @@ function getFirstGraduationYear(step) {
     return Math.ceil(TIMELINE_START_YEAR / step) * step;
 }
 
-function createGraduation(year, isFinal = false, isStart = false) {
-    if (year === 0) {
-        return;
-    }
+function createGraduation(year, options = {}) {
+    if (year === 0) return;
+
+    const {
+        isMinor = false,
+        isFinal = false,
+        isStart = false
+    } = options;
 
     const graduation = document.createElement('div');
     graduation.classList.add('graduation');
 
-    if (isFinal) {
-        graduation.classList.add('final');
-    }
-
-    if (isStart) {
-        graduation.classList.add('start');
-    }
+    if (isMinor) graduation.classList.add('minor');
+    if (isFinal) graduation.classList.add('final');
+    if (isStart) graduation.classList.add('start');
 
     graduation.style.left = yearToPercent(year) + '%';
 
@@ -537,31 +501,69 @@ function createGraduation(year, isFinal = false, isStart = false) {
     const label = document.createElement('div');
     label.classList.add('graduation-label');
     label.textContent = formatTimelineYear(year);
+    label.dataset.year = String(year);
 
     graduation.appendChild(mark);
     graduation.appendChild(label);
     timeline.appendChild(graduation);
 }
 
-function createMinorGraduation(year) {
-    if (year === 0) {
-        return;
+function getGraduationLabelPriority(label) {
+    const year = Number(label.dataset.year);
+
+    if (PRIORITY_GRADUATION_YEARS.has(year)) {
+        return 3;
     }
 
-    const graduation = document.createElement('div');
-    graduation.classList.add('graduation', 'minor');
-    graduation.style.left = yearToPercent(year) + '%';
+    if (year === TIMELINE_END_YEAR || year === HIGHLIGHTED_START_YEAR || year === HIGHLIGHTED_HIJRA_YEAR) {
+        return 2;
+    }
 
-    const mark = document.createElement('div');
-    mark.classList.add('graduation-mark');
+    return 1;
+}
 
-    const label = document.createElement('div');
-    label.classList.add('graduation-label');
-    label.textContent = formatTimelineYear(year);
+function hideOverlappingGraduationLabels() {
+    const labels = Array.from(timeline.querySelectorAll('.graduation:not(.minor) .graduation-label'));
 
-    graduation.appendChild(mark);
-    graduation.appendChild(label);
-    timeline.appendChild(graduation);
+    labels.forEach(label => {
+        label.classList.remove('graduation-label-hidden');
+    });
+
+    const measuredLabels = labels.map((label, index) => {
+        const rect = label.getBoundingClientRect();
+
+        return {
+            label,
+            index,
+            left: rect.left,
+            right: rect.right,
+            priority: getGraduationLabelPriority(label)
+        };
+    });
+
+    const keptLabels = [];
+
+    measuredLabels
+        .sort((a, b) => {
+            if (b.priority !== a.priority) {
+                return b.priority - a.priority;
+            }
+
+            return a.index - b.index;
+        })
+        .forEach(candidate => {
+            const overlapsKeptLabel = keptLabels.some(other => !(
+                candidate.right + GRADUATION_LABEL_COLLISION_PADDING <= other.left ||
+                candidate.left >= other.right + GRADUATION_LABEL_COLLISION_PADDING
+            ));
+
+            if (overlapsKeptLabel) {
+                candidate.label.classList.add('graduation-label-hidden');
+                return;
+            }
+
+            keptLabels.push(candidate);
+        });
 }
 
 function renderGraduations() {
@@ -570,33 +572,44 @@ function renderGraduations() {
     const minorStep = step === 1 ? 0 : step === 2 ? 1 : step === 5 ? 1 : 2;
 
     for (let year = firstYear; year <= TIMELINE_END_YEAR; year += step) {
-        createGraduation(year, year === TIMELINE_END_YEAR, year === HIGHLIGHTED_START_YEAR);
+        createGraduation(year, {
+            isFinal: year === TIMELINE_END_YEAR,
+            isStart: year === HIGHLIGHTED_START_YEAR
+        });
 
-        if (!minorStep) {
-            continue;
-        }
+        if (!minorStep) continue;
 
-        for (let minorYear = year + minorStep; minorYear < year + step && minorYear < TIMELINE_END_YEAR; minorYear += minorStep) {
-            createMinorGraduation(minorYear);
+        for (
+            let minorYear = year + minorStep;
+            minorYear < year + step && minorYear < TIMELINE_END_YEAR;
+            minorYear += minorStep
+        ) {
+            createGraduation(minorYear, { isMinor: true });
         }
     }
 
     if ((TIMELINE_END_YEAR - firstYear) % step !== 0) {
-        createGraduation(TIMELINE_END_YEAR, true);
+        createGraduation(TIMELINE_END_YEAR, { isFinal: true });
     }
 
-    if (HIGHLIGHTED_START_YEAR >= TIMELINE_START_YEAR &&
+    if (
+        HIGHLIGHTED_START_YEAR >= TIMELINE_START_YEAR &&
         HIGHLIGHTED_START_YEAR <= TIMELINE_END_YEAR &&
         HIGHLIGHTED_START_YEAR !== TIMELINE_START_YEAR &&
-        (HIGHLIGHTED_START_YEAR - firstYear) % step !== 0) {
-        createGraduation(HIGHLIGHTED_START_YEAR, false, true);
+        (HIGHLIGHTED_START_YEAR - firstYear) % step !== 0
+    ) {
+        createGraduation(HIGHLIGHTED_START_YEAR, { isStart: true });
     }
 
-    if (HIGHLIGHTED_HIJRA_YEAR >= TIMELINE_START_YEAR &&
+    if (
+        HIGHLIGHTED_HIJRA_YEAR >= TIMELINE_START_YEAR &&
         HIGHLIGHTED_HIJRA_YEAR <= TIMELINE_END_YEAR &&
-        (HIGHLIGHTED_HIJRA_YEAR - firstYear) % step !== 0) {
+        (HIGHLIGHTED_HIJRA_YEAR - firstYear) % step !== 0
+    ) {
         createGraduation(HIGHLIGHTED_HIJRA_YEAR);
     }
+
+    hideOverlappingGraduationLabels();
 }
 
 function shouldShowInlineYear(eventData) {
@@ -605,7 +618,6 @@ function shouldShowInlineYear(eventData) {
 
 function createPointEventElement(eventData, layout, level) {
     const eventElement = document.createElement('div');
-
     eventElement.classList.add('event', 'event-point', `level-${level}`);
     eventElement.style.left = layout.centerPercent + '%';
     eventElement.style.top = layout.top + 'px';
@@ -707,11 +719,7 @@ function renderTimeline() {
 
 function refreshGraduations() {
     const existingGraduations = timeline.querySelectorAll('.graduation');
-
-    existingGraduations.forEach(graduation => {
-        graduation.remove();
-    });
-
+    existingGraduations.forEach(graduation => graduation.remove());
     renderGraduations();
 }
 
@@ -721,15 +729,16 @@ function updateBaseTimelineWidth() {
 
 function applyZoom(zoomLevel) {
     const previousStep = getGraduationStepForZoom(currentZoom);
-
     currentZoom = zoomLevel;
     timeline.style.width = `${baseTimelineWidth * zoomLevel}px`;
 
     const newStep = getGraduationStepForZoom(currentZoom);
-
     if (previousStep !== newStep) {
         refreshGraduations();
+        return;
     }
+
+    hideOverlappingGraduationLabels();
 }
 
 function getScrollLeftForPosition(positionPercent, zoomLevel) {
@@ -740,13 +749,8 @@ function getScrollLeftForPosition(positionPercent, zoomLevel) {
     let newScrollLeft = targetX - containerCenter;
     const maxScrollLeft = Math.max(0, timelineWidth - timelineContainer.clientWidth);
 
-    if (newScrollLeft < 0) {
-        newScrollLeft = 0;
-    }
-
-    if (newScrollLeft > maxScrollLeft) {
-        newScrollLeft = maxScrollLeft;
-    }
+    if (newScrollLeft < 0) newScrollLeft = 0;
+    if (newScrollLeft > maxScrollLeft) newScrollLeft = maxScrollLeft;
 
     return newScrollLeft;
 }
@@ -783,7 +787,6 @@ function shouldBeVisible(event) {
 function updateEventsVisibility() {
     eventsData.forEach(event => {
         const element = eventElements[event.id];
-
         if (!element) return;
 
         if (shouldBeVisible(event)) {
@@ -795,13 +798,10 @@ function updateEventsVisibility() {
 }
 
 function updateEventsState() {
-    const activePath = activeEventId
-        ? [...getAncestors(activeEventId), activeEventId]
-        : [];
+    const activePath = activeEventId ? [...getAncestors(activeEventId), activeEventId] : [];
 
     eventsData.forEach(event => {
         const element = eventElements[event.id];
-
         if (!element) return;
 
         if (activePath.includes(event.id)) {
@@ -822,7 +822,6 @@ function updateButtons() {
     resetViewButton.classList.remove('hidden');
 
     const ancestors = getAncestors(activeEventId);
-
     if (ancestors.length > 0) {
         backButton.classList.remove('hidden');
     } else {
@@ -868,10 +867,10 @@ function animateZoomAndScroll(targetZoom, targetScrollLeft, duration = ANIMATION
 
 function focusOnEvent(eventId) {
     const event = eventsMap[eventId];
-
     if (!event) return;
 
     activeEventId = eventId;
+
     updateEventsVisibility();
     updateEventsState();
     updateButtons();
@@ -887,7 +886,6 @@ function goBackOneLevel() {
     if (isAnimating || !activeEventId) return;
 
     const currentEvent = eventsMap[activeEventId];
-
     if (!currentEvent.parent) return;
 
     const parentEvent = eventsMap[currentEvent.parent];
@@ -907,7 +905,6 @@ function resetView() {
 
 function handleBackgroundNavigationClick(target) {
     if (isAnimating || !activeEventId) return;
-
     if (!modal.classList.contains('hidden')) return;
 
     const clickedInteractiveElement = target.closest(
@@ -917,7 +914,6 @@ function handleBackgroundNavigationClick(target) {
     if (clickedInteractiveElement) return;
 
     const currentEvent = eventsMap[activeEventId];
-
     if (!currentEvent) return;
 
     if (currentEvent.parent) {
@@ -939,7 +935,6 @@ function handleViewportResize() {
     }
 
     const activeEvent = eventsMap[activeEventId];
-
     if (!activeEvent) {
         timelineContainer.scrollLeft = 0;
         return;
@@ -953,7 +948,6 @@ function handleViewportResize() {
 
 backButton.addEventListener('click', goBackOneLevel);
 resetViewButton.addEventListener('click', resetView);
-
 closeModal.addEventListener('click', closeModalWindow);
 
 modal.addEventListener('click', (e) => {
@@ -965,7 +959,6 @@ modal.addEventListener('click', (e) => {
 document.addEventListener('click', (e) => {
     const clickedInlineTerm = e.target.closest('.inline-term');
 
-    // Si on clique ailleurs que sur un mot enrichi OU sur la petite fiche
     if (!clickedInlineTerm && !e.target.closest('#tooltip-card')) {
         hideTooltipCard();
     }
@@ -973,10 +966,7 @@ document.addEventListener('click', (e) => {
     handleBackgroundNavigationClick(e.target);
 });
 
-// Si on scroll → on ferme la fiche
 window.addEventListener('scroll', hideTooltipCard);
-
-// Si on resize → on ferme la fiche
 window.addEventListener('resize', hideTooltipCard);
 window.addEventListener('resize', handleViewportResize);
 
