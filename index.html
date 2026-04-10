@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frise du temps</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="page-hero">
+        <p class="page-kicker">Frise Chronologique</p>
+        <h1>La Vie du Proph&egrave;te Muḥammad &#xFDFA;</h1>
+        <p class="page-subtitle">Une lecture visuelle des grandes &eacute;tapes, de la naissance &agrave; la fin de la mission proph&eacute;tique.</p>
+    </header>
+
+    <div id="controls">
+        <button id="back-button" class="hidden">&larr; Revenir d'un niveau</button>
+        <button id="reset-view" class="hidden">&larr; Revenir &agrave; la vue g&eacute;n&eacute;rale</button>
+    </div>
+
+    <div id="timeline-container">
+        <div id="timeline-wrapper">
+            <div id="timeline"></div>
+        </div>
+    </div>
+
+    <!-- Panneau de lecture -->
+    <div id="modal" class="hidden">
+        <div id="modal-content">
+            <button id="close-modal" aria-label="Fermer la fen&ecirc;tre">&times;</button>
+
+            <div id="modal-header">
+                <div class="modal-kicker">&Eacute;v&eacute;nement</div>
+                <h2 id="modal-title">Titre</h2>
+                <p id="modal-subtitle" class="hidden">Sous-titre</p>
+            </div>
+
+            <div id="modal-body">
+                <div id="modal-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-fen&ecirc;tre pour les mots enrichis -->
+    <div id="tooltip-card" class="hidden">
+        <div id="tooltip-card-title">Titre</div>
+        <div id="tooltip-card-text">Texte</div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
