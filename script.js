@@ -21,7 +21,8 @@ const HIGHLIGHTED_START_YEAR = -53;
 const HIGHLIGHTED_HIJRA_YEAR = 1;
 const PRIORITY_GRADUATION_YEARS = new Set([-53, 1, 11]);
 
-const SIDE_PADDING_PERCENT = 6;
+const AXIS_LEFT_PADDING_PX = 28;
+const AXIS_RIGHT_PADDING_PX = 88;
 const BASE_TIMELINE_HEIGHT = 440;
 const ROOT_EVENT_TOP = 138;
 const LEVEL_GAP = 92;
@@ -281,9 +282,11 @@ function yearToPercent(year) {
         getTimelineOrdinalYear(year) - getTimelineOrdinalYear(TIMELINE_START_YEAR);
 
     const rawPercent = (elapsed / totalDuration) * 100;
-    const usableWidth = 100 - (SIDE_PADDING_PERCENT * 2);
+    const leftPaddingPercent = (AXIS_LEFT_PADDING_PX / baseTimelineWidth) * 100;
+    const rightPaddingPercent = (AXIS_RIGHT_PADDING_PX / baseTimelineWidth) * 100;
+    const usableWidth = 100 - leftPaddingPercent - rightPaddingPercent;
 
-    return SIDE_PADDING_PERCENT + ((rawPercent / 100) * usableWidth);
+    return leftPaddingPercent + ((rawPercent / 100) * usableWidth);
 }
 
 function getEventType(event) {
@@ -927,7 +930,11 @@ function handleViewportResize() {
     if (isAnimating) return;
 
     updateBaseTimelineWidth();
+    renderTimeline();
     applyZoom(currentZoom);
+    updateEventsVisibility();
+    updateEventsState();
+    updateButtons();
 
     if (!activeEventId) {
         timelineContainer.scrollLeft = 0;
