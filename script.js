@@ -22,7 +22,8 @@ const HIGHLIGHTED_HIJRA_YEAR = 1;
 const PRIORITY_GRADUATION_YEARS = new Set([-53, 1, 11]);
 
 const AXIS_LEFT_PADDING_PX = 28;
-const AXIS_RIGHT_PADDING_PX = 88;
+const DESKTOP_AXIS_RIGHT_PADDING_PX = 88;
+const MOBILE_AXIS_RIGHT_PADDING_PX = 124;
 const BASE_TIMELINE_HEIGHT = 440;
 const ROOT_EVENT_TOP = 138;
 const LEVEL_GAP = 92;
@@ -283,7 +284,10 @@ function yearToPercent(year) {
 
     const rawPercent = (elapsed / totalDuration) * 100;
     const leftPaddingPercent = (AXIS_LEFT_PADDING_PX / baseTimelineWidth) * 100;
-    const rightPaddingPercent = (AXIS_RIGHT_PADDING_PX / baseTimelineWidth) * 100;
+    const rightAxisPaddingPx = window.innerWidth <= 640
+        ? MOBILE_AXIS_RIGHT_PADDING_PX
+        : DESKTOP_AXIS_RIGHT_PADDING_PX;
+    const rightPaddingPercent = (rightAxisPaddingPx / baseTimelineWidth) * 100;
     const usableWidth = 100 - leftPaddingPercent - rightPaddingPercent;
 
     return leftPaddingPercent + ((rawPercent / 100) * usableWidth);
