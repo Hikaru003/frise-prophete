@@ -68,18 +68,6 @@ const glossaryData = {
     maysara: {
         title: "Maysara",
         text: "Maysara était le serviteur de Khadīja."
-    },
-    revelation: {
-        title: "Révélation",
-        text: "Tu pourras écrire ici une explication sur la révélation, son sens, son contexte, et sa place dans la chronologie."
-    },
-    hegire: {
-        title: "Hégire",
-        text: "Tu pourras écrire ici une définition de la Hégire et expliquer pourquoi cet événement est central dans la frise."
-    },
-    prophete: {
-        title: "Prophète ﷺ",
-        text: "Tu pourras écrire ici une note courte sur le sens du mot Prophète dans ce contexte."
     }
 };
 
@@ -164,8 +152,15 @@ const eventsData = [
             text: "À l’âge de douze ans, il accompagna son oncle [term:abutalib|Abū Ṭālib] lors d’un voyage vers le [term:sham|Shâm]. Durant ce voyage, ils rencontrèrent un moine nommé [term:bahira|Baḥīrā], qui reconnut en lui des signes annonçant le dernier Prophète. Lorsque Abū Ṭālib affirma qu’il s’agissait de son fils, Baḥīrā répondit que le dernier Prophète devait être orphelin de père. Il confirma alors qu’il était son neveu. Baḥīrā lui conseilla de le ramener rapidement, avertissant que certains, notamment parmi les juifs, pourraient chercher à lui nuire s’ils reconnaissaient ces signes. Ils ont suivi son conseil et sont rentrés."
         }
     },
+        {
+        id: "avantRevelation",
+        type: "point",
+        year: -33,
+        title: "Avant la Révélation",
+    },
     {
         id: "mariageKhadija",
+                parent: "avantRevelation",
         type: "point",
         year: -28,
         title: "Mariage avec Khadīja",
@@ -175,47 +170,382 @@ const eventsData = [
         }
     },
     {
-        id: "revelation",
-        type: "point",
-        year: -13,
-        title: "Révélation",
-        content: {
-            subtitle: "Début du message prophétique",
-            text: "Ici tu pourras expliquer le début de la [term:revelation|révélation]. On peut aussi enrichir des termes liés au [term:prophete|Prophète ﷺ]."
-        }
+    id: "revelation",
+    type: "point",
+    year: -13,
+    title: "Révélation",
+    content: {
+        subtitle: "Début de la mission prophétique",
+        text: `
+Avant de recevoir la Révélation, le Prophète ﷺ se retirait régulièrement dans la grotte de [term:hira|Ḥirāʾ], située sur la montagne [term:nur|An-Nūr], pour adorer Dieu et méditer.
+
+À l’âge de quarante ans, il reçut la Révélation : les premiers versets de la sourate [term:alaq|Al-‘Alaq].
+        `
+    }
     },
     {
-        id: "premiers-musulmans",
-        parent: "revelation",
-        type: "period",
-        start: -13,
-        end: -10,
-        title: "Premiers musulmans",
-        content: {
-            subtitle: "Début des conversions",
-            text: "Ici tu pourras écrire les informations sur les premiers convertis."
-        }
+    id: "premiersMusulmans",
+    parent: "revelation",
+    type: "point",
+    year: -13,
+    title: "Premiers musulmans",
+    content: {
+        subtitle: "Les premières conversions",
+        text: `
+Après la Révélation, il rentra chez lui où [term:khadija|Khadīja] fut la première à croire en lui.
+
+Puis vinrent les premiers croyants :
+
+• [term:abubakr|Abū Bakr] (premier homme)
+
+• [term:ali|ʿAlī] (premier enfant)
+
+• [term:zayd|Zayd ibn Ḥāritha] (premier affranchi)
+        `
+    }
     },
     {
-        id: "hegire",
+    id: "persecutions",
+    parent: "revelation",
+    type: "period",
+    start: -13,
+    end: -1,
+    title: "Persécutions à La Mecque",
+    content: {
+        subtitle: "Épreuves des premiers musulmans",
+        text: `
+Les musulmans subirent de nombreuses persécutions de la part des Quraysh.
+
+Parmi leurs opposants se trouvaient [term:abulahab|Abū Lahab] et son épouse [term:ummjamil|Umm Jamīl].
+
+Certains compagnons furent durement éprouvés, comme [term:bilal|Bilāl]. D’autres, comme [term:sumayya|Sumayya], furent tués pour leur foi.
+        `
+    }
+    },
+    {
+    id: "abyssinie",
+    parent: "revelation",
+    type: "point",
+    year: -8,
+    title: "Émigration en Abyssinie",
+    content: {
+        subtitle: "Première migration des musulmans",
+        text: `
+Face aux persécutions, certains musulmans émigrèrent vers [term:habasha|Al-Ḥabasha].
+
+Deux groupes partirent successivement. Le premier revint après une fausse information, tandis que le second s’y installa durablement.
+        `
+    }
+    },
+    {
+    id: "anneeTristesse",
+    parent: "revelation",
+    type: "point",
+    year: -3,
+    title: "Année de tristesse",
+    content: {
+        subtitle: "Période difficile",
+        text: `
+Vers l’âge de cinquante ans, il perdit deux soutiens majeurs : son oncle [term:abutalib|Abū Ṭālib] et son épouse [term:khadija|Khadīja].
+
+Cette période est connue comme l’Année de la tristesse.
+        `
+    }
+    },
+    {
+    id: "isra",
+    parent: "revelation",
+    type: "point",
+    year: -2,
+    title: "Voyage nocturne",
+    content: {
+        subtitle: "Al-Isrāʾ wa-l-Miʿrāj",
+        text: `
+Le Prophète ﷺ fut transporté de la Ka‘ba jusqu’à [term:aqsa|Al-Aqṣā], puis élevé dans les cieux.
+
+C’est lors de cette nuit que les cinq prières furent rendues obligatoires.
+        `
+    }
+    },
+    {
+    id: "bayatAqaba",
+    parent: "revelation",
+    type: "period",
+    start: -2,
+    end: -1,
+    title: "Serments d’allégeance",
+    content: {
+        subtitle: "Avant l’Hégire",
+        text: `
+Avant l’Hégire, des habitants de [term:yathrib|Yathrib] vinrent rencontrer le Prophète ﷺ à La Mecque.
+
+Ils acceptèrent l’Islām et conclurent avec lui des serments d’allégeance, connus sous le nom de Bayʿat al-ʿAqaba.
+
+Ces engagements marquèrent le début du soutien des habitants de Yathrib et préparèrent l’Hégire.
+        `
+    }
+    },
+    {
+    id: "premierSerment",
+    parent: "bayatAqaba",
+    type: "point",
+    year: -2,
+    title: "Premier serment d’al-ʿAqaba",
+    content: {
+        subtitle: "Première rencontre",
+        text: `
+Un groupe d’habitants de Yathrib accepta l’Islām et prêta un premier serment d’allégeance au Prophète ﷺ.
+
+Après cela, il envoya [term:musab|Muṣʿab ibn ʿUmayr] pour enseigner l’Islām dans leur ville.
+        `
+    }
+    },
+    {
+    id: "deuxiemeSerment",
+    parent: "bayatAqaba",
+    type: "point",
+    year: -1,
+    title: "Deuxième serment d’al-ʿAqaba",
+    content: {
+        subtitle: "Engagement et protection",
+        text: `
+L’année suivante, un groupe plus important revint rencontrer le Prophète ﷺ.
+
+Ils lui promirent soutien et protection, et l’invitèrent à s’installer à Yathrib.
+
+Cet engagement ouvrit la voie à l’Hégire.
+        `
+    }
+    },
+    {
+    id: "hegire",
+    type: "point",
+    year: 1,
+    title: "Hégire",
+    content: {
+        subtitle: "Migration vers Médine",
+        text: `
+Lorsque l’Islām se propagea à [term:medine|Médine] et que ses habitants furent prêts à accueillir le Prophète ﷺ, il reçut la permission d’émigrer.
+
+Les musulmans de La Mecque reçurent alors l’ordre de quitter leur ville pour rejoindre Médine.
+
+Cette migration marque le début d’une nouvelle étape dans l’histoire de l’Islām.
+        `
+    }
+    },
+    {
+    id: "departMecque",
+    parent: "hegire",
+    type: "point",
+    year: 1,
+    title: "Départ de La Mecque",
+    content: {
+        subtitle: "Début du voyage",
+        text: `
+Le Prophète ﷺ fut informé par révélation du complot préparé contre lui par les mécréants de Quraysh.
+
+Il demanda à [term:ali|ʿAlī ibn Abī Ṭālib] de prendre sa place dans son lit, puis quitta discrètement sa maison.
+
+Il partit alors en compagnie de [term:abubakr|Abū Bakr], avec lequel il devait accomplir l’Hégire.
+        `
+    }
+    },
+    {
+    id: "grotteThawr",
+    parent: "hegire",
+    type: "point",
+    year: 1,
+    title: "Grotte de Thawr",
+    content: {
+        subtitle: "Temps de refuge",
+        text: `
+Au lieu de prendre directement la route du nord vers Médine, le Prophète ﷺ et Abū Bakr se dirigèrent vers [term:thawr|Thawr] afin de se cacher dans une grotte.
+
+Les mécréants arrivèrent jusqu’à son entrée, mais Allâh les préserva et ils ne furent pas découverts.
+
+Après cela, ils purent reprendre leur route vers Médine.
+        `
+    }
+    },
+    {
+    id: "arriveeQuba",
+    parent: "hegire",
+    type: "point",
+    year: 1,
+    title: "Arrivée à Qubâ’",
+    content: {
+        subtitle: "Première étape près de Médine",
+        text: `
+Le Prophète ﷺ arriva d’abord à [term:quba|Qubâ’], aux environs de Médine.
+
+Il y resta plusieurs jours et y fit construire la première mosquée de l’Islām.
+        `
+    }
+    },
+    {
+    id: "entreeMedine",
+    parent: "hegire",
+    type: "point",
+    year: 1,
+    title: "Entrée à Médine",
+    content: {
+        subtitle: "Installation dans la nouvelle ville",
+        text: `
+Après son passage par Qubâ’, le Prophète ﷺ entra à Médine.
+
+Sa chamelle s’arrêta à un endroit précis, où fut ensuite construite [term:mosqueeProphete|la Mosquée du Prophète].
+
+Il fut accueilli chez [term:abuayyub|Abū Ayyūb al-Anṣārī], le temps de s’installer.
+        `
+    }
+    },
+    {
+    id: "periodeMedinoise",
+    parent: "hegire",
+    type: "period",
+    start: 1,
+    end: 11,
+    title: "Période médinoise",
+    content: {
+        subtitle: "De l’Hégire jusqu’à la fin de sa vie",
+        text: `
+Après l’Hégire, commença la période médinoise, marquée par l’organisation de la communauté musulmane, les révélations de nouvelles obligations, les expéditions, les traités et les grands événements des dernières années de sa vie ﷺ.
+        `
+    }
+    },
+    {
+    id: "organisationMedine",
+    parent: "periodeMedinoise",
+    type: "point",
+    year: 1,
+    title: "Organisation de Médine",
+    content: {
+        subtitle: "Début de la communauté",
+        text: `
+Après l’Hégire, le Prophète ﷺ organisa la vie à Médine.
+
+Il fit construire la mosquée, établit la fraternité entre les musulmans et conclut des accords avec les habitants de la ville.
+        `
+    }
+    },
+    {
+        id: "fraternisation",
+        parent: "periodeMedinoise",
         type: "point",
         year: 1,
-        title: "Hégire",
+        title: "Fraternisation",
         content: {
-            subtitle: "Moment clé de la chronologie",
-            text: "Tu peux expliquer ici la [term:hegire|Hégire] en détail. Et faire un lien avec [term:medine|Médine]."
+            subtitle: "Entre Muhājirūn et Anṣār",
+            text: `
+    Le Prophète ﷺ établit un lien de fraternité entre les émigrés de La Mecque et les habitants de Médine.
+
+    Ils partagèrent leurs biens et s’entraidèrent pour construire la nouvelle communauté.
+            `
         }
     },
     {
-        id: "construction-mosquee",
-        parent: "hegire",
-        type: "period",
-        start: 1,
-        end: 2,
-        title: "Construction de la mosquée",
+        id: "badr",
+        parent: "periodeMedinoise",
+        type: "point",
+        year: 2,
+        title: "Bataille de Badr",
         content: {
-            subtitle: "Installation à Médine",
-            text: "Ici tu pourras écrire les informations sur la mosquée de Médine."
+            subtitle: "Première grande victoire",
+            text: `
+    La bataille de Badr fut la première grande confrontation entre les musulmans et les Quraysh.
+
+    Malgré leur faible nombre, les musulmans remportèrent la victoire.
+            `
+        }
+    },
+    {
+        id: "uhud",
+        parent: "periodeMedinoise",
+        type: "point",
+        year: 3,
+        title: "Bataille de Uhud",
+        content: {
+            subtitle: "Une épreuve difficile",
+            text: `
+    Lors de la bataille de Uhud, les musulmans subirent une épreuve après avoir désobéi à certaines consignes.
+
+    Cet événement fut une leçon importante pour la communauté.
+            `
+        }
+    },
+    {
+        id: "khandaq",
+        parent: "periodeMedinoise",
+        type: "point",
+        year: 5,
+        title: "Bataille du Fossé",
+        content: {
+            subtitle: "Défense de Médine",
+            text: `
+    Face à une coalition ennemie, les musulmans creusèrent un fossé autour de Médine pour se défendre.
+
+    Cette stratégie permit de protéger la ville.
+            `
+        }
+    },
+    {
+        id: "hudaybiya",
+        parent: "periodeMedinoise",
+        type: "point",
+        year: 6,
+        title: "Traité de Hudaybiya",
+        content: {
+            subtitle: "Accord avec Quraysh",
+            text: `
+    Un traité de paix fut conclu entre les musulmans et les Quraysh.
+
+    Bien qu’il semble désavantageux au départ, il permit une grande expansion de l’Islām.
+            `
+        }
+    },
+    {
+        id: "conqueteMecque",
+        parent: "periodeMedinoise",
+        type: "point",
+        year: 8,
+        title: "Conquête de La Mecque",
+        content: {
+            subtitle: "Retour dans la ville natale",
+            text: `
+    Le Prophète ﷺ entra à La Mecque avec une armée importante.
+
+    La ville fut conquise sans grande résistance, et de nombreuses personnes embrassèrent l’Islām.
+            `
+        }
+    },
+    {
+        id: "hajjAdieu",
+        parent: "periodeMedinoise",
+        type: "point",
+        year: 10,
+        title: "Pèlerinage d’adieu",
+        content: {
+            subtitle: "Dernier grand événement",
+            text: `
+    Le Prophète ﷺ accomplit son dernier pèlerinage.
+
+    Il y prononça un discours important résumant les principes de l’Islām.
+            `
+        }
+    },
+    {
+        id: "deces",
+        parent: "periodeMedinoise",
+        type: "point",
+        year: 11,
+        title: "Décès",
+        content: {
+            subtitle: "Fin de sa mission",
+            text: `
+    Le Prophète ﷺ tomba malade puis décéda à Médine.
+
+    Il fut enterré dans la maison de [term:aisha|ʿĀʾisha].
+            `
         }
     },
     {
@@ -224,8 +554,8 @@ const eventsData = [
         year: 11,
         title: "Mort",
         content: {
-            subtitle: "Dernière grande étape visible sur la frise principale",
-            text: "Ici tu pourras écrire les derniers événements de sa vie ﷺ. Le panneau peut accueillir un texte assez long sans casser la mise en page. Plus tard, on pourra encore ajouter des mots enrichis, des notes, ou même des sections internes."
+            subtitle: "Sa mort",
+            text: "Info sur sa Mort"
         }
     }
 ];

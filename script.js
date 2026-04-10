@@ -20,6 +20,7 @@ const ANIMATION_DURATION = 340;
 const HIGHLIGHTED_START_YEAR = -53;
 const HIGHLIGHTED_HIJRA_YEAR = 1;
 const PRIORITY_GRADUATION_YEARS = new Set([-53, 1, 11]);
+const HIDDEN_INLINE_YEAR_EVENT_IDS = new Set(['avantRevelation']);
 
 const AXIS_LEFT_PADDING_PX = 28;
 const DESKTOP_AXIS_RIGHT_PADDING_PX = 88;
@@ -30,6 +31,8 @@ const LEVEL_GAP = 92;
 const LANE_GAP = 52;
 const COLLISION_THRESHOLD_PERCENT = 10;
 const GRADUATION_LABEL_COLLISION_PADDING = 4;
+const EVENT_LABEL_COLLISION_PADDING_X = 14;
+const EVENT_LABEL_COLLISION_PADDING_Y = 10;
 const PERIOD_SAME_LANE_GAP_PERCENT = 1.4;
 const PERIOD_MIN_YEAR_GAP_FOR_SAME_LANE = 1;
 const TIMELINE_BOTTOM_PADDING = 96;
@@ -473,6 +476,19 @@ function updateTimelineHeight() {
     timeline.style.height = `${Math.max(BASE_TIMELINE_HEIGHT, requiredHeight)}px`;
 }
 
+function updateTimelineHeightFromRenderedEvents() {
+    const renderedBottoms = Object.values(eventElements)
+        .filter(Boolean)
+        .map(element => element.offsetTop + element.offsetHeight + TIMELINE_BOTTOM_PADDING);
+
+    if (!renderedBottoms.length) {
+        updateTimelineHeight();
+        return;
+    }
+
+    timeline.style.height = `${Math.max(BASE_TIMELINE_HEIGHT, ...renderedBottoms)}px`;
+}
+
 function getGraduationStepForZoom(zoomLevel) {
     if (zoomLevel >= 2.8) return 1;
     if (zoomLevel >= 1.8) return 2;
@@ -620,7 +636,66 @@ function renderGraduations() {
 }
 
 function shouldShowInlineYear(eventData) {
-    return getLevel(eventData) === 0;
+    return getLevel(eventData) === 0 && !HIDDEN_INLINE_YEAR_EVENT_IDS.has(eventData.id);
+}
+
+function doEventRectsOverlap(firstRect, secondRect) {
+    return !(
+        firstRect.right + EVENT_LABEL_COLLISION_PADDING_X <= secondRect.left ||
+        firstRect.left >= secondRect.right + EVENT_LABEL_COLLISION_PADDING_X ||
+        firstRect.bottom + EVENT_LABEL_COLLISION_PADDING_Y <= secondRect.top ||
+        firstRect.top >= secondRect.bottom + EVENT_LABEL_COLLISION_PADDING_Y
+    );
+}
+
+function resolveVisibleEventCollisions() {
+    const visibleElements = eventsData
+        .map(event => eventElements[event.id])
+        .filter(element => element && element.classList.contains('visible'));
+
+    visibleElements.forEach(element => {
+        const layout = eventLayoutMap[element.dataset.id];
+        if (!layout) return;
+
+        element.style.top = `${layout.top}px`;
+    });
+
+    const placedElements = [];
+
+    visibleElements
+        .sort((firstElement, secondElement) => {
+            const firstLayout = eventLayoutMap[firstElement.dataset.id];
+            const secondLayout = eventLayoutMap[secondElement.dataset.id];
+
+            if (firstLayout.top !== secondLayout.top) {
+                return firstLayout.top - secondLayout.top;
+            }
+
+            return firstLayout.centerPercent - secondLayout.centerPercent;
+        })
+        .forEach(element => {
+            let rect = element.getBoundingClientRect();
+            let hasCollision = true;
+
+            while (hasCollision) {
+                hasCollision = false;
+
+                for (const placedElement of placedElements) {
+                    if (!doEventRectsOverlap(rect, placedElement.rect)) {
+                        continue;
+                    }
+
+                    element.style.top = `${placedElement.element.offsetTop + LANE_GAP}px`;
+                    rect = element.getBoundingClientRect();
+                    hasCollision = true;
+                    break;
+                }
+            }
+
+            placedElements.push({ element, rect });
+        });
+
+    updateTimelineHeightFromRenderedEvents();
 }
 
 function createPointEventElement(eventData, layout, level) {
@@ -742,10 +817,11 @@ function applyZoom(zoomLevel) {
     const newStep = getGraduationStepForZoom(currentZoom);
     if (previousStep !== newStep) {
         refreshGraduations();
-        return;
+    } else {
+        hideOverlappingGraduationLabels();
     }
 
-    hideOverlappingGraduationLabels();
+    resolveVisibleEventCollisions();
 }
 
 function getScrollLeftForPosition(positionPercent, zoomLevel) {
@@ -802,6 +878,8 @@ function updateEventsVisibility() {
             element.classList.remove('visible');
         }
     });
+
+    resolveVisibleEventCollisions();
 }
 
 function updateEventsState() {
