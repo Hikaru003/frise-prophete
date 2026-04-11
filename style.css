@@ -1,3 +1,4 @@
+/* Style global de la page, avec la typographie de base et le fond general. */
 body {
     font-family: "Segoe UI", Arial, sans-serif;
     text-align: center;
@@ -8,6 +9,7 @@ body {
         linear-gradient(180deg, #f4f1ea 0%, #f8f7f3 42%, #f5f5f5 100%);
 }
 
+/* Habillage du bandeau d'introduction en haut de la page. */
 .page-hero {
     width: min(920px, calc(100% - 32px));
     margin: 28px auto 18px;
@@ -18,6 +20,7 @@ body {
     box-shadow: 0 18px 40px rgba(16, 20, 24, 0.08);
 }
 
+/* Petit libelle introductif au-dessus du titre principal. */
 .page-kicker {
     margin: 0 0 10px;
     font-size: 12px;
@@ -27,6 +30,7 @@ body {
     color: #6b7280;
 }
 
+/* Titre principal de la page. */
 h1 {
     margin: 0;
     font-size: clamp(1.85rem, 3.6vw, 3rem);
@@ -36,6 +40,7 @@ h1 {
     font-family: Georgia, "Times New Roman", serif;
 }
 
+/* Sous-titre descriptif sous le titre principal. */
 .page-subtitle {
     max-width: 720px;
     margin: 14px auto 0;
@@ -44,6 +49,7 @@ h1 {
     color: #52606d;
 }
 
+/* Zone qui contient les boutons de navigation de la frise. */
 #controls {
     margin-top: 14px;
     margin-bottom: 8px;
@@ -54,6 +60,7 @@ h1 {
     flex-wrap: wrap;
 }
 
+/* Style commun des boutons de retour et de reinitialisation. */
 #back-button,
 #reset-view {
     border: 1px solid rgba(20, 33, 43, 0.12);
@@ -72,12 +79,14 @@ h1 {
         background-color 0.2s ease;
 }
 
+/* Etat de survol des boutons d'action. */
 #back-button:hover,
 #reset-view:hover {
     transform: translateY(-1px);
     box-shadow: 0 14px 28px rgba(20, 33, 43, 0.12);
 }
 
+/* Conteneur externe de la frise, avec cadre, fond et ombre. */
 #timeline-container {
     width: 90%;
     margin: 26px auto 40px;
@@ -95,10 +104,12 @@ h1 {
     z-index: 0;
 }
 
+/* Wrapper simple pour maitriser la largeur utile de la frise. */
 #timeline-wrapper {
     width: 100%;
 }
 
+/* Surface principale de la frise et variables CSS utilises pour dessiner l'axe. */
 #timeline {
     position: relative;
     width: 100%;
@@ -114,6 +125,7 @@ h1 {
     --axis-shadow: rgba(16, 20, 24, 0.22);
 }
 
+/* Trait horizontal principal de l'axe chronologique. */
 #timeline::before {
     content: "";
     position: absolute;
@@ -128,6 +140,7 @@ h1 {
     box-shadow: 0 8px 18px var(--axis-shadow);
 }
 
+/* Pointe de fleche affichee a droite de l'axe. */
 #timeline::after {
     content: "";
     position: absolute;
@@ -141,43 +154,53 @@ h1 {
     filter: drop-shadow(0 6px 10px rgba(16, 20, 24, 0.28));
 }
 
+/* Ajustements visuels pour les ecrans intermediaires et tablettes. */
 @media (max-width: 900px) {
+    /* Le bandeau d'introduction prend un peu moins de place en largeur. */
     .page-hero {
         width: calc(100% - 24px);
         padding: 24px 18px 18px;
         border-radius: 20px;
     }
 
+    /* Le petit libelle gagne un espacement plus compact. */
     .page-kicker {
         letter-spacing: 0.18em;
     }
 
+    /* Le sous-titre est legerement reduit sur ecran plus etroit. */
     .page-subtitle {
         font-size: 0.95rem;
     }
 
+    /* Le conteneur de la frise occupe une largeur un peu plus genereuse. */
     #timeline-container {
         width: 94%;
     }
 
+    /* La hauteur de la frise est reduite pour rester confortable sur tablette. */
     #timeline {
         height: 400px;
     }
 
+    /* Les libelles de graduations sont un peu compacts sur ecran moyen. */
     .graduation-label {
         font-size: 11px;
         padding: 4px 8px;
     }
 
+    /* Le titre des evenements racine est reduit pour tenir plus facilement. */
     .event.level-0 .event-title {
         font-size: 14px;
     }
 
+    /* L'annee inline des evenements est reduite elle aussi. */
     .event-year {
         font-size: 10px;
     }
 }
 
+/* Bloc de base d'une graduation affichee au-dessus de l'axe. */
 .graduation {
     position: absolute;
     top: 24px;
@@ -186,6 +209,7 @@ h1 {
     z-index: 3;
 }
 
+/* Petit point decoratif relie a chaque graduation. */
 .graduation::after {
     content: "";
     position: absolute;
@@ -200,6 +224,7 @@ h1 {
     box-shadow: 0 4px 10px rgba(24, 49, 66, 0.18);
 }
 
+/* Trait vertical principal de la graduation. */
 .graduation-mark {
     width: 3px;
     height: 56px;
@@ -209,6 +234,7 @@ h1 {
     box-shadow: 0 4px 10px rgba(16, 20, 24, 0.16);
 }
 
+/* Etiquette texte d'une graduation majeure. */
 .graduation-label {
     font-size: 12px;
     color: #183142;
@@ -222,15 +248,18 @@ h1 {
     font-weight: 600;
 }
 
+/* Classe utilitaire pour masquer un libelle de graduation en collision. */
 .graduation-label-hidden {
     display: none;
 }
 
+/* Variante visuelle d'une graduation mineure. */
 .graduation.minor {
     top: 48px;
     z-index: 2;
 }
 
+/* Point decoratif plus discret pour une graduation mineure. */
 .graduation.minor::after {
     width: 6px;
     height: 6px;
@@ -240,6 +269,7 @@ h1 {
     box-shadow: none;
 }
 
+/* Trait vertical plus court pour une graduation mineure. */
 .graduation.minor .graduation-mark {
     width: 2px;
     height: 28px;
@@ -247,15 +277,18 @@ h1 {
     box-shadow: none;
 }
 
+/* Les graduations mineures n'affichent pas de texte. */
 .graduation.minor .graduation-label {
     display: none;
 }
 
+/* Mise en avant de la graduation finale de la frise. */
 .graduation.final .graduation-mark {
     height: 62px;
     background: linear-gradient(180deg, #d97706 0%, #7c2d12 100%);
 }
 
+/* Point decoratif accentue pour la graduation finale. */
 .graduation.final::after {
     width: 12px;
     height: 12px;
@@ -263,6 +296,7 @@ h1 {
     border-color: #9a3412;
 }
 
+/* Etiquette coloree specifique a la graduation finale. */
 .graduation.final .graduation-label {
     color: #7c2d12;
     font-weight: bold;
@@ -270,11 +304,13 @@ h1 {
     border-color: rgba(154, 52, 18, 0.2);
 }
 
+/* Mise en avant de la graduation correspondant au debut important de la frise. */
 .graduation.start .graduation-mark {
     height: 62px;
     background: linear-gradient(180deg, #22c55e 0%, #166534 100%);
 }
 
+/* Point decoratif accentue pour la graduation de depart. */
 .graduation.start::after {
     width: 12px;
     height: 12px;
@@ -282,6 +318,7 @@ h1 {
     border-color: #166534;
 }
 
+/* Etiquette coloree specifique a la graduation de depart. */
 .graduation.start .graduation-label {
     color: #166534;
     font-weight: bold;
@@ -289,6 +326,7 @@ h1 {
     border-color: rgba(22, 101, 52, 0.2);
 }
 
+/* Base commune de tous les evenements affiches sur la frise. */
 .event {
     position: absolute;
     transform: translateX(-50%);
@@ -300,17 +338,20 @@ h1 {
     z-index: 3;
 }
 
+/* Etat visible d'un evenement lorsque la navigation l'autorise. */
 .event.visible {
     opacity: 1;
     pointer-events: auto;
 }
 
+/* Titre textuel principal d'un evenement. */
 .event-title {
     display: block;
     white-space: nowrap;
     line-height: 1.25;
 }
 
+/* Petite ligne d'annee affichee sous certains evenements racine. */
 .event-year {
     display: block;
     margin-top: 4px;
@@ -319,11 +360,13 @@ h1 {
     white-space: nowrap;
 }
 
+/* Reglages de base pour un evenement ponctuel. */
 .event-point {
     transform: translateX(-50%);
     min-width: 90px;
 }
 
+/* Point graphique affiche au-dessus du libelle d'un evenement ponctuel. */
 .event-point::before {
     content: "";
     display: block;
@@ -332,14 +375,17 @@ h1 {
     transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Effet de survol d'un evenement ponctuel. */
 .event-point:hover {
     transform: translateX(-50%) scale(1.05);
 }
 
+/* Le point graphique grossit legerement au survol. */
 .event-point:hover::before {
     transform: scale(1.12);
 }
 
+/* Reglages de base pour un evenement de type periode. */
 .event-period {
     transform: none;
     min-width: 0;
@@ -347,12 +393,14 @@ h1 {
     transition: color 0.2s ease, opacity 0.25s ease;
 }
 
+/* Variante plus specifique pour stabiliser les transitions des periodes. */
 .event.event-period {
     transform: none;
     transform-origin: center center;
     transition: transform 0.2s ease, color 0.2s ease, opacity 0.25s ease;
 }
 
+/* Barre horizontale qui represente visuellement la duree d'une periode. */
 .event-period .period-bar {
     height: 8px;
     border-radius: 999px;
@@ -362,18 +410,22 @@ h1 {
     transform: none !important;
 }
 
+/* Le libelle d'une periode reste sur une seule ligne. */
 .event-period .event-title {
     white-space: nowrap;
 }
 
+/* Effet de survol sur un evenement de type periode. */
 .event-period:hover {
     transform: scale(1.03) !important;
 }
 
+/* Renfort de specificite pour conserver le meme comportement au survol. */
 .event.event-period:hover {
     transform: scale(1.03) !important;
 }
 
+/* La barre de periode gagne une mise en avant visuelle au survol. */
 .event-period:hover .period-bar {
     filter: brightness(1.08) saturate(1.08);
     box-shadow:
@@ -382,10 +434,12 @@ h1 {
     transform: none !important;
 }
 
+/* Palette et hierarchie visuelle des evenements de niveau 0. */
 .event.level-0 {
     color: #101418;
 }
 
+/* Titre plus grand et plus fort pour les evenements racine. */
 .event.level-0 .event-title {
     font-size: 17px;
     font-weight: bold;
@@ -393,6 +447,7 @@ h1 {
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
+/* Point graphique des evenements ponctuels de niveau 0. */
 .event-point.level-0::before {
     width: 14px;
     height: 14px;
@@ -400,38 +455,46 @@ h1 {
     box-shadow: 0 10px 18px rgba(16, 20, 24, 0.18);
 }
 
+/* Barre graphique des periodes de niveau 0. */
 .event-period.level-0 .period-bar {
     background: linear-gradient(90deg, #273a49 0%, #11181f 100%);
 }
 
+/* Palette et hierarchie visuelle des evenements de niveau 1. */
 .event.level-1 {
     color: #405261;
 }
 
+/* Titre des evenements de niveau 1. */
 .event.level-1 .event-title {
     font-size: 13px;
     font-weight: 600;
 }
 
+/* Point graphique des evenements ponctuels de niveau 1. */
 .event-point.level-1::before {
     width: 10px;
     height: 10px;
     background: linear-gradient(180deg, #60798d 0%, #3b4f5d 100%);
 }
 
+/* Barre graphique des periodes de niveau 1. */
 .event-period.level-1 .period-bar {
     background: linear-gradient(90deg, #708899 0%, #476071 100%);
 }
 
+/* Palette et hierarchie visuelle des evenements de niveau 2. */
 .event.level-2 {
     color: #2f5167;
 }
 
+/* Titre des evenements de niveau 2. */
 .event.level-2 .event-title {
     font-size: 13px;
     font-weight: 600;
 }
 
+/* Point graphique des evenements ponctuels de niveau 2. */
 .event-point.level-2::before {
     width: 9px;
     height: 9px;
@@ -439,22 +502,26 @@ h1 {
     box-shadow: 0 6px 14px rgba(47, 81, 103, 0.18);
 }
 
+/* Barre graphique des periodes de niveau 2. */
 .event-period.level-2 .period-bar {
     background: linear-gradient(90deg, #7ea1b8 0%, #3b6077 100%);
 }
 
+/* Palette simplifiee pour les niveaux profonds de la hierarchie. */
 .event.level-3,
 .event.level-4,
 .event.level-5 {
     color: #777;
 }
 
+/* Taille de titre reduite pour les niveaux 3 a 5. */
 .event.level-3 .event-title,
 .event.level-4 .event-title,
 .event.level-5 .event-title {
     font-size: 11px;
 }
 
+/* Point graphique simplifie pour les niveaux 3 a 5. */
 .event-point.level-3::before,
 .event-point.level-4::before,
 .event-point.level-5::before {
@@ -463,34 +530,41 @@ h1 {
     background: #999;
 }
 
+/* Barre simplifiee pour les periodes de niveaux 3 a 5. */
 .event-period.level-3 .period-bar,
 .event-period.level-4 .period-bar,
 .event-period.level-5 .period-bar {
     background: #999;
 }
 
+/* Halo d'accentuation pour un evenement ponctuel actif. */
 .event-point.active::before {
     box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.12);
     transform: scale(1.12);
 }
 
+/* Halo d'accentuation pour une periode active. */
 .event-period.active .period-bar {
     box-shadow: 0 0 0 6px rgba(32, 49, 61, 0.10);
 }
 
+/* Renforcement du titre pour l'evenement actif. */
 .event.active .event-title {
     font-weight: bold;
 }
 
+/* Renforcement de l'annee inline pour l'evenement actif. */
 .event.active .event-year {
     color: #444;
     font-weight: bold;
 }
 
+/* Blocage du scroll de page pendant l'ouverture de la modale. */
 body.modal-open {
     overflow: hidden;
 }
 
+/* Overlay plein ecran qui assombrit l'arriere-plan derriere la modale. */
 #modal {
     position: fixed;
     inset: 0;
@@ -502,6 +576,7 @@ body.modal-open {
     z-index: 1000;
 }
 
+/* Fenetre principale de lecture du contenu d'un evenement. */
 #modal-content {
     position: relative;
     background: #ffffff;
@@ -514,14 +589,27 @@ body.modal-open {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    transition: height 0.82s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* En-tete de la modale avec titre et sous-titre. */
 #modal-header {
+    position: relative;
     padding: 30px 34px 20px 34px;
     border-bottom: 1px solid #ececec;
     background: linear-gradient(to bottom, #fafafa, #ffffff);
 }
 
+/* Zone qui aligne les actions secondaires dans l'en-tete de la modale. */
+.modal-header-actions {
+    position: absolute;
+    top: 100px;
+    right: 34px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Petit libelle d'introduction dans l'en-tete de la modale. */
 .modal-kicker {
     font-size: 12px;
     letter-spacing: 0.08em;
@@ -531,6 +619,7 @@ body.modal-open {
     font-weight: 600;
 }
 
+/* Titre principal de la modale. */
 #modal-title {
     margin: 0;
     font-size: 31px;
@@ -538,6 +627,7 @@ body.modal-open {
     color: #111;
 }
 
+/* Sous-titre descriptif de la modale. */
 #modal-subtitle {
     margin: 10px 0 0 0;
     color: #666;
@@ -545,15 +635,20 @@ body.modal-open {
     line-height: 1.65;
 }
 
+/* Corps scrollable de la modale. */
 #modal-body {
     padding: 0;
     overflow-y: auto;
+    transition: height 0.82s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Zone interne qui contient le texte de la modale. */
 #modal-text {
+    position: relative;
     padding: 26px 34px 34px 34px;
 }
 
+/* Style des paragraphes dans le contenu de la modale. */
 #modal-text p {
     margin: 0 0 18px 0;
     line-height: 1.95;
@@ -561,16 +656,89 @@ body.modal-open {
     font-size: 18px;
 }
 
+/* Zone qui sert de scene de transition pour le texte de la modale. */
+.modal-text-stage {
+    position: relative;
+    overflow: hidden;
+    transition: height 0.82s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Panneau de texte individuel anime pendant l'echange resume/details. */
+.modal-text-panel {
+    width: 100%;
+}
+
+/* Panneau temporaire utilise uniquement pour mesurer la hauteur cible. */
+.modal-text-panel.is-measuring {
+    display: block;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Etat d'entree du nouveau panneau de texte. */
+.modal-text-panel.is-entering {
+    opacity: 0;
+    transform: translateY(-18px);
+}
+
+/* Etat stable du panneau actuellement visible. */
+.modal-text-panel.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 0.68s ease,
+        transform 0.82s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Etat de sortie de l'ancien panneau qui remonte puis disparait. */
+.modal-text-panel.is-leaving {
+    opacity: 0;
+    transform: translateY(-12px);
+    transition:
+        opacity 0.58s ease,
+        transform 0.74s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Bouton qui permet d'afficher ou masquer le contenu detaille. */
+.modal-details-toggle {
+    border: 1px solid rgba(20, 33, 43, 0.08);
+    background: rgba(255, 255, 255, 0.72);
+    color: #52606d;
+    padding: 12px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(20, 33, 43, 0.05);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+/* Mise en avant legere du bouton de details au survol. */
+.modal-details-toggle:hover {
+    transform: translateY(-1px);
+    border-color: rgba(20, 33, 43, 0.12);
+    color: #33424d;
+    box-shadow: 0 10px 22px rgba(20, 33, 43, 0.08);
+}
+
+/* On supprime la marge du dernier paragraphe pour finir proprement. */
 #modal-text p:last-child {
     margin-bottom: 0;
 }
 
+/* Style d'un sous-titre eventuel dans le contenu textuel de la modale. */
 #modal-text h3 {
     margin: 24px 0 10px 0;
     font-size: 18px;
     color: #111;
 }
 
+/* Bouton de fermeture rond affiche dans le coin superieur droit de la modale. */
 #close-modal {
     position: absolute;
     top: 14px;
@@ -588,16 +756,19 @@ body.modal-open {
     z-index: 2;
 }
 
+/* Etat de survol du bouton de fermeture. */
 #close-modal:hover {
     background: rgba(0, 0, 0, 0.08);
     color: black;
     transform: scale(1.05);
 }
 
+/* Classe utilitaire generique pour masquer n'importe quel element. */
 .hidden {
     display: none !important;
 }
 
+/* Petite animation d'apparition utilisee par la modale. */
 @keyframes fadeInScale {
     from {
         opacity: 0;
@@ -609,6 +780,7 @@ body.modal-open {
     }
 }
 
+/* Bouton inline discret utilise pour les termes enrichis dans les textes. */
 .inline-term {
     border: none;
     background: none;
@@ -619,11 +791,13 @@ body.modal-open {
     font-weight: 600;
 }
 
+/* Etat de survol d'un terme enrichi. */
 .inline-term:hover {
     color: black;
     border-bottom-color: black;
 }
 
+/* Carte flottante qui affiche le glossaire contextuel. */
 #tooltip-card {
     position: fixed;
     width: min(420px, calc(100vw - 24px));
@@ -635,6 +809,7 @@ body.modal-open {
     z-index: 1100;
 }
 
+/* Titre de la carte de glossaire. */
 #tooltip-card-title {
     font-weight: bold;
     margin-bottom: 10px;
@@ -642,25 +817,30 @@ body.modal-open {
     text-align: center;
 }
 
+/* Zone texte principale de la carte de glossaire. */
 #tooltip-card-text {
     font-size: 17px;
     line-height: 1.8;
     text-align: left;
 }
 
+/* Paragraphes internes de la carte de glossaire. */
 #tooltip-card-text p {
     margin: 0 0 12px 0;
 }
 
+/* Nettoyage de la marge finale dans la carte de glossaire. */
 #tooltip-card-text p:last-child {
     margin-bottom: 0;
 }
 
+/* Liste a puces eventuelle affichee dans le glossaire. */
 #tooltip-card-text ul {
     padding-left: 18px;
     margin-top: 6px;
 }
 
+/* Espacement vertical entre les elements de liste du glossaire. */
 #tooltip-card-text li {
     margin-bottom: 6px;
 }

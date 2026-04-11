@@ -1,6 +1,10 @@
+// References directes vers les elements principaux de l'interface.
 const timeline = document.getElementById('timeline');
 const timelineContainer = document.getElementById('timeline-container');
 const modal = document.getElementById('modal');
+const modalContent = document.getElementById('modal-content');
+const modalHeader = document.getElementById('modal-header');
+const modalBody = document.getElementById('modal-body');
 const modalTitle = document.getElementById('modal-title');
 const modalSubtitle = document.getElementById('modal-subtitle');
 const modalText = document.getElementById('modal-text');
@@ -11,17 +15,21 @@ const tooltipCardText = document.getElementById('tooltip-card-text');
 const resetViewButton = document.getElementById('reset-view');
 const backButton = document.getElementById('back-button');
 
+// Reglages globaux du zoom et de l'animation de navigation.
 const DEFAULT_ZOOM = 1;
 const POINT_FOCUS_ZOOM = 2.6;
 const MIN_PERIOD_ZOOM = 1.35;
 const MAX_PERIOD_ZOOM = 2.4;
 const ANIMATION_DURATION = 340;
+const MODAL_SIZE_TRANSITION_MS = 620;
 
+// Annees qui recoivent un traitement visuel particulier sur l'axe.
 const HIGHLIGHTED_START_YEAR = -53;
 const HIGHLIGHTED_HIJRA_YEAR = 1;
 const PRIORITY_GRADUATION_YEARS = new Set([-53, 1, 11]);
 const HIDDEN_INLINE_YEAR_EVENT_IDS = new Set(['avantRevelation']);
 
+// Constantes de mise en page utilisees pour placer l'axe et les evenements.
 const AXIS_LEFT_PADDING_PX = 28;
 const DESKTOP_AXIS_RIGHT_PADDING_PX = 88;
 const MOBILE_AXIS_RIGHT_PADDING_PX = 124;
@@ -38,19 +46,32 @@ const PERIOD_MIN_YEAR_GAP_FOR_SAME_LANE = 1;
 const TIMELINE_BOTTOM_PADDING = 96;
 const PARENT_CHILD_MIN_VERTICAL_GAP = 78;
 
+// Etat courant de l'interface: niveau de zoom, evenement actif et largeur de base.
 let currentZoom = DEFAULT_ZOOM;
 let activeEventId = null;
 let isAnimating = false;
 let baseTimelineWidth = 0;
 
+// Index internes utilises pour retrouver rapidement les donnees et les elements rendus.
 const eventsMap = {};
+const childrenByParentId = {};
 const eventElements = {};
 const eventLayoutMap = {};
 
+// Construction d'index pour acceder rapidement aux evenements par id et par parent.
 eventsData.forEach(event => {
     eventsMap[event.id] = event;
+
+    if (!event.parent) return;
+
+    if (!childrenByParentId[event.parent]) {
+        childrenByParentId[event.parent] = [];
+    }
+
+    childrenByParentId[event.parent].push(event);
 });
 
+// Recherche l'annee minimale et maximale presentes dans toutes les donnees.
 function getTimelineBoundaryYears() {
     const years = [];
 
@@ -66,8 +87,10 @@ function getTimelineBoundaryYears() {
     };
 }
 
+// Bornes temporelles globales de la frise, calculees une seule fois au chargement.
 const { start: TIMELINE_START_YEAR, end: TIMELINE_END_YEAR } = getTimelineBoundaryYears();
 
+// Formate une annee pour l'affichage sur l'axe ou a cote d'un evenement.
 function formatTimelineYear(year) {
     if (year < 0) {
         return `${Math.abs(year)} av. H`;
@@ -75,6 +98,7 @@ function formatTimelineYear(year) {
     return `${year} H`;
 }
 
+// Reconvertit l'annee pour supprimer l'annee zero dans les calculs de distance.
 function getTimelineOrdinalYear(year) {
     if (year > 0) {
         return year - 1;
@@ -82,10 +106,20 @@ function getTimelineOrdinalYear(year) {
     return year;
 }
 
+// Decoupe un texte en paragraphes exploitables pour le rendu HTML.
+function getTextParagraphs(text) {
+    return text
+        .split(/\n\s*\n/)
+        .map(paragraph => paragraph.trim())
+        .filter(paragraph => paragraph.length > 0);
+}
+
+// Cache la mini-fenetre du glossaire.
 function hideTooltipCard() {
     tooltipCard.classList.add('hidden');
 }
 
+// Place la mini-fenetre du glossaire pres du point clique sans sortir de l'ecran.
 function positionTooltipCard(x, y) {
     const cardWidth = tooltipCard.offsetWidth;
     const cardHeight = tooltipCard.offsetHeight;
@@ -109,6 +143,7 @@ function positionTooltipCard(x, y) {
     tooltipCard.style.top = top + 'px';
 }
 
+// Affiche le contenu d'un terme du glossaire dans la mini-fenetre contextuelle.
 function showTooltipCard(termKey, x, y) {
     const entry = glossaryData[termKey];
     if (!entry) return;
@@ -117,14 +152,11 @@ function showTooltipCard(termKey, x, y) {
     tooltipCardText.innerHTML = "";
 
     if (entry.text) {
-        const paragraphs = entry.text
-            .split(/\n\s*\n/)
-            .map(paragraph => paragraph.trim())
-            .filter(paragraph => paragraph.length > 0);
+        const paragraphs = getTextParagraphs(entry.text);
 
         paragraphs.forEach(paragraphText => {
             const textElement = document.createElement('p');
-            textElement.textContent = paragraphText;
+            appendRichText(textElement, paragraphText);
             tooltipCardText.appendChild(textElement);
         });
     }
@@ -134,7 +166,7 @@ function showTooltipCard(termKey, x, y) {
 
         entry.list.forEach(item => {
             const li = document.createElement('li');
-            li.textContent = item;
+            appendRichText(li, item);
             ul.appendChild(li);
         });
 
@@ -145,6 +177,7 @@ function showTooltipCard(termKey, x, y) {
     positionTooltipCard(x, y);
 }
 
+// Cree un bouton inline pour un terme du glossaire dans les textes.
 function createInlineTermButton(termKey, label) {
     const button = document.createElement('button');
     button.type = 'button';
@@ -165,37 +198,56 @@ function createInlineTermButton(termKey, label) {
     return button;
 }
 
-function appendRichText(paragraphElement, text) {
-    const regex = /\[term:([^|\]]+)\|([^\]]+)\]/g;
+// Injecte le texte normal, le gras et les termes cliquables dans un conteneur inline.
+function appendRichInlineContent(container, text) {
+    const regex = /(\[term:([^|\]]+)\|([^\]]+)\]|\*\*([^*]+)\*\*)/g;
     let lastIndex = 0;
     let match;
 
     while ((match = regex.exec(text)) !== null) {
         const fullMatch = match[0];
-        const termKey = match[1];
-        const label = match[2];
         const matchIndex = match.index;
 
         const textBefore = text.slice(lastIndex, matchIndex);
         if (textBefore) {
-            paragraphElement.appendChild(document.createTextNode(textBefore));
+            container.appendChild(document.createTextNode(textBefore));
         }
 
-        paragraphElement.appendChild(createInlineTermButton(termKey, label));
+        const termKey = match[2];
+        const termLabel = match[3];
+        const boldText = match[4];
+
+        if (termKey) {
+            if (glossaryData[termKey]) {
+                container.appendChild(createInlineTermButton(termKey, termLabel));
+            } else {
+                container.appendChild(document.createTextNode(termLabel));
+            }
+        } else if (boldText) {
+            const strong = document.createElement('strong');
+            appendRichInlineContent(strong, boldText);
+            container.appendChild(strong);
+        } else {
+            container.appendChild(document.createTextNode(fullMatch));
+        }
+
         lastIndex = matchIndex + fullMatch.length;
     }
 
     const remainingText = text.slice(lastIndex);
     if (remainingText) {
-        paragraphElement.appendChild(document.createTextNode(remainingText));
+        container.appendChild(document.createTextNode(remainingText));
     }
 }
 
+// Transforme un texte enrichi en noeuds HTML melant texte, gras et boutons.
+function appendRichText(paragraphElement, text) {
+    appendRichInlineContent(paragraphElement, text);
+}
+
+// Rend un texte long dans un conteneur en recreant ses paragraphes.
 function renderTextContent(container, text) {
-    const paragraphs = text
-        .split(/\n\s*\n/)
-        .map(paragraph => paragraph.trim())
-        .filter(paragraph => paragraph.length > 0);
+    const paragraphs = getTextParagraphs(text);
 
     paragraphs.forEach(paragraphText => {
         const paragraph = document.createElement('p');
@@ -204,16 +256,45 @@ function renderTextContent(container, text) {
     });
 }
 
-function openModal(eventData) {
-    modalTitle.textContent = eventData.title || "";
-
+// Normalise les champs de contenu de la modale pour supporter resume et details.
+function getModalContentParts(eventData) {
     const hasStructuredContent =
         eventData.content &&
         typeof eventData.content === 'object' &&
         !Array.isArray(eventData.content);
 
-    const subtitle = hasStructuredContent ? eventData.content.subtitle : "";
-    const text = hasStructuredContent ? eventData.content.text : "";
+    if (hasStructuredContent) {
+        return {
+            subtitle: eventData.content.subtitle || "",
+            summary: eventData.content.summary || eventData.content.text || "",
+            details: eventData.content.details || ""
+        };
+    }
+
+    return {
+        subtitle: "",
+        summary: eventData.description || "",
+        details: ""
+    };
+}
+
+// Met a jour l'etat visuel du bloc de details dans la modale.
+function setModalDetailsExpanded(detailsSection, toggleButton, isExpanded) {
+    toggleButton.textContent = isExpanded ? "Moins de détails" : "Plus de détails";
+    toggleButton.setAttribute('aria-expanded', String(isExpanded));
+    detailsSection.classList.toggle('expanded', isExpanded);
+    detailsSection.setAttribute('aria-hidden', String(!isExpanded));
+    detailsSection.style.maxHeight = isExpanded
+        ? `${detailsSection.scrollHeight}px`
+        : '0px';
+}
+
+// Ouvre la fenetre modale et y injecte le contenu d'un evenement.
+function openModal(eventData) {
+    modalTitle.textContent = eventData.title || "";
+
+    const { subtitle, summary, details } = getModalContentParts(eventData);
+    const hasDetails = typeof details === 'string' && details.trim().length > 0;
 
     if (subtitle) {
         modalSubtitle.textContent = subtitle;
@@ -225,12 +306,32 @@ function openModal(eventData) {
 
     modalText.innerHTML = "";
 
-    if (text && text.trim()) {
-        renderTextContent(modalText, text);
-    } else if (eventData.description) {
-        const paragraph = document.createElement('p');
-        appendRichText(paragraph, eventData.description);
-        modalText.appendChild(paragraph);
+    if (summary && summary.trim()) {
+        const summarySection = document.createElement('div');
+        summarySection.className = 'modal-summary';
+        renderTextContent(summarySection, summary);
+        modalText.appendChild(summarySection);
+
+        if (hasDetails) {
+            const toggleButton = document.createElement('button');
+            toggleButton.type = 'button';
+            toggleButton.className = 'modal-details-toggle';
+            toggleButton.textContent = 'Plus de détails';
+            toggleButton.setAttribute('aria-expanded', 'false');
+
+            const detailsSection = document.createElement('div');
+            detailsSection.className = 'modal-details';
+            detailsSection.setAttribute('aria-hidden', 'true');
+            renderTextContent(detailsSection, details);
+
+            toggleButton.addEventListener('click', () => {
+                const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+                setModalDetailsExpanded(detailsSection, toggleButton, !isExpanded);
+            });
+
+            modalText.appendChild(toggleButton);
+            modalText.appendChild(detailsSection);
+        }
     } else {
         const paragraph = document.createElement('p');
         paragraph.textContent = "Aucun contenu n'a encore été ajouté pour cet événement.";
@@ -242,20 +343,187 @@ function openModal(eventData) {
     document.body.classList.add('modal-open');
 }
 
+// Redefinit la mise a jour du bouton de details pour piloter un echange de contenu.
+function setModalDetailsExpanded(toggleButton, isExpanded) {
+    toggleButton.textContent = isExpanded ? "Moins de details" : "Plus de details";
+    toggleButton.setAttribute('aria-expanded', String(isExpanded));
+}
+
+// Cree un panneau de contenu a afficher dans la zone de lecture de la modale.
+function createModalContentPanel(text) {
+    const panel = document.createElement('div');
+    panel.className = 'modal-text-panel';
+    renderTextContent(panel, text);
+    return panel;
+}
+
+// Calcule la hauteur maximale disponible pour le corps scrollable de la modale.
+function getModalBodyMaxHeight() {
+    const modalMaxHeight = window.innerHeight * 0.85;
+    const headerHeight = modalHeader.getBoundingClientRect().height;
+    return Math.max(120, modalMaxHeight - headerHeight);
+}
+
+// Calcule la hauteur cible reelle du corps de modale pour un contenu donne.
+function getModalBodyTargetHeight(contentHeight) {
+    const modalTextStyles = window.getComputedStyle(modalText);
+    const verticalPadding =
+        parseFloat(modalTextStyles.paddingTop) +
+        parseFloat(modalTextStyles.paddingBottom);
+
+    return Math.min(getModalBodyMaxHeight(), contentHeight + verticalPadding);
+}
+
+// Echange le contenu affiche dans la modale avec une animation verticale fluide.
+function swapModalContent(stage, nextText) {
+    const currentPanel = stage.querySelector('.modal-text-panel');
+    const nextPanel = createModalContentPanel(nextText);
+
+    nextPanel.classList.add('is-measuring');
+    stage.appendChild(nextPanel);
+    const nextHeight = nextPanel.offsetHeight;
+    nextPanel.remove();
+
+    if (!currentPanel) {
+        nextPanel.classList.remove('is-measuring');
+        nextPanel.classList.add('is-active');
+        stage.appendChild(nextPanel);
+        stage.style.height = 'auto';
+        return;
+    }
+
+    const currentHeight = currentPanel.offsetHeight;
+    const currentBodyHeight = modalBody.getBoundingClientRect().height;
+    const isGrowing = nextHeight > currentHeight;
+    const nextBodyHeight = isGrowing
+        ? Math.min(
+            getModalBodyMaxHeight(),
+            Math.max(0, currentBodyHeight + (nextHeight - currentHeight))
+        )
+        : getModalBodyTargetHeight(nextHeight);
+    const swapDelay = isGrowing ? 320 : 180;
+    const resetDelay = MODAL_SIZE_TRANSITION_MS + 80;
+
+    stage.style.height = `${currentHeight}px`;
+    modalBody.style.height = `${currentBodyHeight}px`;
+    modalBody.style.overflowY = 'hidden';
+    void stage.offsetHeight;
+    void modalBody.offsetHeight;
+
+    currentPanel.classList.add('is-leaving');
+
+    requestAnimationFrame(() => {
+        stage.style.height = `${nextHeight}px`;
+        modalBody.style.height = `${nextBodyHeight}px`;
+    });
+
+    window.setTimeout(() => {
+        if (currentPanel.parentNode === stage) {
+            currentPanel.remove();
+        }
+
+        nextPanel.classList.remove('is-measuring');
+        nextPanel.classList.add('is-entering');
+        stage.appendChild(nextPanel);
+        void nextPanel.offsetHeight;
+
+        requestAnimationFrame(() => {
+            nextPanel.classList.remove('is-entering');
+            nextPanel.classList.add('is-active');
+        });
+    }, swapDelay);
+
+    window.setTimeout(() => {
+        stage.style.height = 'auto';
+        modalBody.style.height = '';
+        modalBody.style.overflowY = 'auto';
+    }, resetDelay);
+}
+
+// Cree la zone d'actions de l'en-tete de modale si elle n'existe pas encore.
+function ensureModalHeaderActions() {
+    let actions = modalHeader.querySelector('.modal-header-actions');
+
+    if (!actions) {
+        actions = document.createElement('div');
+        actions.className = 'modal-header-actions';
+        modalHeader.appendChild(actions);
+    }
+
+    actions.innerHTML = "";
+    return actions;
+}
+
+// Redefinit l'ouverture de modale pour remplacer le resume par les details a la demande.
+function openModal(eventData) {
+    modalTitle.textContent = eventData.title || "";
+
+    const { subtitle, summary, details } = getModalContentParts(eventData);
+    const hasDetails = typeof details === 'string' && details.trim().length > 0;
+
+    if (subtitle) {
+        modalSubtitle.textContent = subtitle;
+        modalSubtitle.classList.remove('hidden');
+    } else {
+        modalSubtitle.textContent = "";
+        modalSubtitle.classList.add('hidden');
+    }
+
+    modalText.innerHTML = "";
+    modalBody.style.height = '';
+    modalBody.style.overflowY = 'auto';
+    const headerActions = ensureModalHeaderActions();
+
+    if (summary && summary.trim()) {
+        const stage = document.createElement('div');
+        stage.className = 'modal-text-stage';
+        modalText.appendChild(stage);
+        swapModalContent(stage, summary);
+
+        if (hasDetails) {
+            const toggleButton = document.createElement('button');
+            toggleButton.type = 'button';
+            toggleButton.className = 'modal-details-toggle';
+            setModalDetailsExpanded(toggleButton, false);
+
+            toggleButton.addEventListener('click', () => {
+                const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+                const nextExpandedState = !isExpanded;
+                setModalDetailsExpanded(toggleButton, nextExpandedState);
+                swapModalContent(stage, nextExpandedState ? details : summary);
+            });
+
+            headerActions.appendChild(toggleButton);
+        }
+    } else {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = "Aucun contenu n'a encore ete ajoute pour cet evenement.";
+        modalText.appendChild(paragraph);
+    }
+
+    hideTooltipCard();
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+}
+
+// Ferme la fenetre modale et nettoie aussi la mini-fenetre du glossaire.
 function closeModalWindow() {
     modal.classList.add('hidden');
     document.body.classList.remove('modal-open');
     hideTooltipCard();
 }
 
+// Retourne tous les enfants directs d'un evenement.
 function getChildren(parentId) {
-    return eventsData.filter(event => event.parent === parentId);
+    return childrenByParentId[parentId] || [];
 }
 
+// Indique si un evenement possede au moins un enfant.
 function hasChildren(eventId) {
     return getChildren(eventId).length > 0;
 }
 
+// Calcule la profondeur hierarchique d'un evenement dans l'arbre.
 function getLevel(event) {
     let level = 0;
     let currentEvent = event;
@@ -268,6 +536,7 @@ function getLevel(event) {
     return level;
 }
 
+// Retrouve l'evenement racine de la famille a laquelle appartient un evenement.
 function getFamilyRootId(event) {
     let currentEvent = event;
 
@@ -278,6 +547,7 @@ function getFamilyRootId(event) {
     return currentEvent.id;
 }
 
+// Convertit une annee en pourcentage horizontal sur la largeur de la frise.
 function yearToPercent(year) {
     const totalDuration =
         getTimelineOrdinalYear(TIMELINE_END_YEAR) - getTimelineOrdinalYear(TIMELINE_START_YEAR);
@@ -296,50 +566,60 @@ function yearToPercent(year) {
     return leftPaddingPercent + ((rawPercent / 100) * usableWidth);
 }
 
+// Normalise le type d'un evenement quand il n'est pas explicitement renseigne.
 function getEventType(event) {
     return event.type || "point";
 }
 
+// Renvoie l'annee de debut d'un evenement, quel que soit son format de donnees.
 function getEventStartYear(event) {
     if (typeof event.start === 'number') return event.start;
     if (typeof event.year === 'number') return event.year;
     return TIMELINE_START_YEAR;
 }
 
+// Renvoie l'annee de fin d'un evenement, en reutilisant le debut pour un point.
 function getEventEndYear(event) {
     if (typeof event.end === 'number') return event.end;
     if (typeof event.year === 'number') return event.year;
     return getEventStartYear(event);
 }
 
+// Calcule le centre temporel d'un evenement pour les placements et recentrages.
 function getEventCenterYear(event) {
     const start = getEventStartYear(event);
     const end = getEventEndYear(event);
     return (start + end) / 2;
 }
 
+// Convertit le debut d'un evenement en position horizontale.
 function getEventStartPercent(event) {
     return yearToPercent(getEventStartYear(event));
 }
 
+// Convertit la fin d'un evenement en position horizontale.
 function getEventEndPercent(event) {
     return yearToPercent(getEventEndYear(event));
 }
 
+// Convertit le centre d'un evenement en position horizontale.
 function getEventCenterPercent(event) {
     return yearToPercent(getEventCenterYear(event));
 }
 
+// Calcule la largeur horizontale occupee par un evenement sur la frise.
 function getEventSpanPercent(event) {
     const startPercent = getEventStartPercent(event);
     const endPercent = getEventEndPercent(event);
     return Math.max(endPercent - startPercent, 0);
 }
 
+// Mesure l'ecart chronologique entre deux evenements consecutifs.
 function getGapAfterEventInYears(previousEvent, nextEvent) {
     return getEventStartYear(nextEvent) - getEventEndYear(previousEvent);
 }
 
+// Determine le niveau de zoom le plus adapte pour focaliser un evenement.
 function getFocusZoomForEvent(event) {
     if (getEventType(event) === 'point') {
         return POINT_FOCUS_ZOOM;
@@ -360,13 +640,16 @@ function getFocusZoomForEvent(event) {
     );
 }
 
+// Calcule la position de tous les evenements avant leur rendu dans le DOM.
 function computeEventLayout() {
     const levelsMap = {};
 
+    // On repart d'un layout vide pour recalculer proprement apres un rerender.
     Object.keys(eventLayoutMap).forEach(eventId => {
         delete eventLayoutMap[eventId];
     });
 
+    // On groupe d'abord les evenements par profondeur dans la hierarchie.
     eventsData.forEach(event => {
         const level = getLevel(event);
         if (!levelsMap[level]) {
@@ -379,6 +662,7 @@ function computeEventLayout() {
         const level = Number(levelKey);
         const familyMap = {};
 
+        // A profondeur egale, on separe les branches pour mieux gerer les collisions.
         levelsMap[level].forEach(event => {
             const familyRootId = getFamilyRootId(event);
 
@@ -390,6 +674,7 @@ function computeEventLayout() {
         });
 
         Object.values(familyMap).forEach(familyEvents => {
+            // Les evenements sont tries dans l'ordre chronologique avant placement.
             const sortedEvents = familyEvents
                 .slice()
                 .sort((a, b) => {
@@ -406,6 +691,7 @@ function computeEventLayout() {
             const laneLastEvent = [];
             let lastAssignedLane = 0;
 
+            // Chaque evenement est place sur une ligne verticale compatible.
             sortedEvents.forEach(event => {
                 const startPercent = getEventStartPercent(event);
                 const endPercent = getEventEndPercent(event);
@@ -418,6 +704,8 @@ function computeEventLayout() {
 
                 let lane = 0;
 
+                // On garde une distance minimale horizontale pour eviter que
+                // deux evenements tres proches se retrouvent sur la meme ligne.
                 while (
                     laneLastEnd[lane] !== undefined &&
                     startPercent - laneLastEnd[lane] < COLLISION_THRESHOLD_PERCENT
@@ -467,7 +755,19 @@ function computeEventLayout() {
     });
 }
 
-function updateTimelineHeight() {
+// Ajuste la hauteur totale de la frise a partir du layout theorique ou du rendu reel.
+function updateTimelineHeight(useRenderedElements = false) {
+    const renderedBottoms = useRenderedElements
+        ? Object.values(eventElements)
+            .filter(Boolean)
+            .map(element => element.offsetTop + element.offsetHeight + TIMELINE_BOTTOM_PADDING)
+        : [];
+
+    if (renderedBottoms.length) {
+        timeline.style.height = `${Math.max(BASE_TIMELINE_HEIGHT, ...renderedBottoms)}px`;
+        return;
+    }
+
     const tops = Object.values(eventLayoutMap).map(layout => layout.top);
     const requiredHeight = tops.length
         ? Math.max(...tops) + TIMELINE_BOTTOM_PADDING
@@ -476,19 +776,7 @@ function updateTimelineHeight() {
     timeline.style.height = `${Math.max(BASE_TIMELINE_HEIGHT, requiredHeight)}px`;
 }
 
-function updateTimelineHeightFromRenderedEvents() {
-    const renderedBottoms = Object.values(eventElements)
-        .filter(Boolean)
-        .map(element => element.offsetTop + element.offsetHeight + TIMELINE_BOTTOM_PADDING);
-
-    if (!renderedBottoms.length) {
-        updateTimelineHeight();
-        return;
-    }
-
-    timeline.style.height = `${Math.max(BASE_TIMELINE_HEIGHT, ...renderedBottoms)}px`;
-}
-
+// Choisit l'espacement des graduations selon le niveau de zoom courant.
 function getGraduationStepForZoom(zoomLevel) {
     if (zoomLevel >= 2.8) return 1;
     if (zoomLevel >= 1.8) return 2;
@@ -496,10 +784,12 @@ function getGraduationStepForZoom(zoomLevel) {
     return 10;
 }
 
+// Trouve la premiere graduation majeure a afficher dans la plage visible.
 function getFirstGraduationYear(step) {
     return Math.ceil(TIMELINE_START_YEAR / step) * step;
 }
 
+// Cree une graduation complete avec sa marque et son libelle.
 function createGraduation(year, options = {}) {
     if (year === 0) return;
 
@@ -531,6 +821,7 @@ function createGraduation(year, options = {}) {
     timeline.appendChild(graduation);
 }
 
+// Donne une priorite d'affichage aux annees les plus importantes.
 function getGraduationLabelPriority(label) {
     const year = Number(label.dataset.year);
 
@@ -545,9 +836,11 @@ function getGraduationLabelPriority(label) {
     return 1;
 }
 
+// Masque les libelles de graduations qui se chevauchent visuellement.
 function hideOverlappingGraduationLabels() {
     const labels = Array.from(timeline.querySelectorAll('.graduation:not(.minor) .graduation-label'));
 
+    // On reaffiche tout avant de refaire une passe propre de collision.
     labels.forEach(label => {
         label.classList.remove('graduation-label-hidden');
     });
@@ -589,6 +882,7 @@ function hideOverlappingGraduationLabels() {
         });
 }
 
+// Rend toutes les graduations majeures et mineures de l'axe temporel.
 function renderGraduations() {
     const step = getGraduationStepForZoom(currentZoom);
     const firstYear = getFirstGraduationYear(step);
@@ -635,10 +929,12 @@ function renderGraduations() {
     hideOverlappingGraduationLabels();
 }
 
+// Decide si l'annee d'un evenement racine doit etre affichee en petit sous son titre.
 function shouldShowInlineYear(eventData) {
     return getLevel(eventData) === 0 && !HIDDEN_INLINE_YEAR_EVENT_IDS.has(eventData.id);
 }
 
+// Indique si deux blocs d'evenements se chevauchent dans le rendu final.
 function doEventRectsOverlap(firstRect, secondRect) {
     return !(
         firstRect.right + EVENT_LABEL_COLLISION_PADDING_X <= secondRect.left ||
@@ -648,11 +944,13 @@ function doEventRectsOverlap(firstRect, secondRect) {
     );
 }
 
+// Corrige les collisions encore visibles apres le placement theorique des evenements.
 function resolveVisibleEventCollisions() {
     const visibleElements = eventsData
         .map(event => eventElements[event.id])
         .filter(element => element && element.classList.contains('visible'));
 
+    // On reapplique d'abord le top de base calcule par le layout.
     visibleElements.forEach(element => {
         const layout = eventLayoutMap[element.dataset.id];
         if (!layout) return;
@@ -677,6 +975,8 @@ function resolveVisibleEventCollisions() {
             let rect = element.getBoundingClientRect();
             let hasCollision = true;
 
+            // Le layout donne une base stable, puis cette passe ajuste seulement
+            // les cas restants qui se chevauchent apres rendu reel du texte.
             while (hasCollision) {
                 hasCollision = false;
 
@@ -695,9 +995,10 @@ function resolveVisibleEventCollisions() {
             placedElements.push({ element, rect });
         });
 
-    updateTimelineHeightFromRenderedEvents();
+    updateTimelineHeight(true);
 }
 
+// Cree le DOM d'un evenement ponctuel.
 function createPointEventElement(eventData, layout, level) {
     const eventElement = document.createElement('div');
     eventElement.classList.add('event', 'event-point', `level-${level}`);
@@ -724,6 +1025,7 @@ function createPointEventElement(eventData, layout, level) {
     return eventElement;
 }
 
+// Cree le DOM d'un evenement de type periode avec sa barre horizontale.
 function createPeriodEventElement(eventData, layout, level) {
     const eventElement = document.createElement('div');
     const widthPercent = Math.max(layout.endPercent - layout.startPercent, 1.2);
@@ -751,6 +1053,7 @@ function createPeriodEventElement(eventData, layout, level) {
     return eventElement;
 }
 
+// Cree un evenement, l'ajoute dans la frise et lui associe son comportement au clic.
 function createEventElement(eventData) {
     const level = getLevel(eventData);
     const layout = eventLayoutMap[eventData.id];
@@ -785,12 +1088,14 @@ function createEventElement(eventData) {
     eventElements[eventData.id] = eventElement;
 }
 
+// Rend tous les evenements a partir des donnees chargees.
 function renderEvents() {
     eventsData.forEach(event => {
         createEventElement(event);
     });
 }
 
+// Reconstruit la frise complete: layout, hauteur, graduations puis evenements.
 function renderTimeline() {
     timeline.innerHTML = '';
     computeEventLayout();
@@ -799,16 +1104,19 @@ function renderTimeline() {
     renderEvents();
 }
 
+// Supprime puis regenere uniquement les graduations de l'axe.
 function refreshGraduations() {
     const existingGraduations = timeline.querySelectorAll('.graduation');
     existingGraduations.forEach(graduation => graduation.remove());
     renderGraduations();
 }
 
+// Mesure la largeur de reference de la frise avant application du zoom.
 function updateBaseTimelineWidth() {
     baseTimelineWidth = Math.max(timelineContainer.clientWidth, 640);
 }
 
+// Applique un niveau de zoom, ajuste l'axe et relance la correction des collisions.
 function applyZoom(zoomLevel) {
     const previousStep = getGraduationStepForZoom(currentZoom);
     currentZoom = zoomLevel;
@@ -824,6 +1132,7 @@ function applyZoom(zoomLevel) {
     resolveVisibleEventCollisions();
 }
 
+// Calcule le scroll horizontal necessaire pour centrer une position sur la frise.
 function getScrollLeftForPosition(positionPercent, zoomLevel) {
     const timelineWidth = baseTimelineWidth * zoomLevel;
     const targetX = (positionPercent / 100) * timelineWidth;
@@ -838,6 +1147,7 @@ function getScrollLeftForPosition(positionPercent, zoomLevel) {
     return newScrollLeft;
 }
 
+// Remonte tous les ancetres d'un evenement, du plus haut jusqu'au parent direct.
 function getAncestors(eventId) {
     const ancestors = [];
     let currentEvent = eventsMap[eventId];
@@ -850,10 +1160,18 @@ function getAncestors(eventId) {
     return ancestors;
 }
 
+// Construit le chemin complet de navigation vers un evenement actif.
+function getEventPath(eventId) {
+    if (!eventId) return [];
+    return [...getAncestors(eventId), eventId];
+}
+
+// Indique si un evenement est a la racine de la frise.
 function isRootEvent(event) {
     return !event.parent;
 }
 
+// Determine si un evenement doit etre visible selon le niveau de navigation courant.
 function shouldBeVisible(event) {
     if (isRootEvent(event)) {
         return true;
@@ -863,10 +1181,11 @@ function shouldBeVisible(event) {
         return false;
     }
 
-    const path = [...getAncestors(activeEventId), activeEventId];
+    const path = getEventPath(activeEventId);
     return path.includes(event.parent);
 }
 
+// Affiche ou masque les evenements en fonction de l'evenement actif.
 function updateEventsVisibility() {
     eventsData.forEach(event => {
         const element = eventElements[event.id];
@@ -882,8 +1201,9 @@ function updateEventsVisibility() {
     resolveVisibleEventCollisions();
 }
 
+// Marque visuellement le chemin actif dans la hierarchie des evenements.
 function updateEventsState() {
-    const activePath = activeEventId ? [...getAncestors(activeEventId), activeEventId] : [];
+    const activePath = getEventPath(activeEventId);
 
     eventsData.forEach(event => {
         const element = eventElements[event.id];
@@ -897,6 +1217,7 @@ function updateEventsState() {
     });
 }
 
+// Met a jour les boutons de navigation selon la profondeur actuelle.
 function updateButtons() {
     if (!activeEventId) {
         backButton.classList.add('hidden');
@@ -914,19 +1235,23 @@ function updateButtons() {
     }
 }
 
+// Fonction d'easing utilisee pour rendre les animations de zoom plus fluides.
 function easeInOutCubic(t) {
     return t < 0.5
         ? 4 * t * t * t
         : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
+// Anime simultanement le zoom de la frise et son deplacement horizontal.
 function animateZoomAndScroll(targetZoom, targetScrollLeft, duration = ANIMATION_DURATION) {
     const startZoom = currentZoom;
     const startScrollLeft = timelineContainer.scrollLeft;
     const startTime = performance.now();
 
+    // Le drapeau bloque les interactions pendant toute la duree de l'animation.
     isAnimating = true;
 
+    // Cette sous-fonction est rappelee a chaque frame jusqu'a la fin de l'animation.
     function step(currentTime) {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
@@ -950,6 +1275,7 @@ function animateZoomAndScroll(targetZoom, targetScrollLeft, duration = ANIMATION
     requestAnimationFrame(step);
 }
 
+// Focalise la vue sur un evenement en mettant a jour l'etat puis en animant la camera.
 function focusOnEvent(eventId) {
     const event = eventsMap[eventId];
     if (!event) return;
@@ -967,6 +1293,7 @@ function focusOnEvent(eventId) {
     animateZoomAndScroll(targetZoom, targetScrollLeft);
 }
 
+// Remonte d'un niveau dans la hierarchie depuis l'evenement actuellement actif.
 function goBackOneLevel() {
     if (isAnimating || !activeEventId) return;
 
@@ -977,6 +1304,7 @@ function goBackOneLevel() {
     focusOnEvent(parentEvent.id);
 }
 
+// Revient a la vue generale de la frise.
 function resetView() {
     if (isAnimating) return;
 
@@ -988,6 +1316,7 @@ function resetView() {
     animateZoomAndScroll(DEFAULT_ZOOM, 0);
 }
 
+// Gere le clic dans le fond de la page pour revenir en arriere dans la navigation.
 function handleBackgroundNavigationClick(target) {
     if (isAnimating || !activeEventId) return;
     if (!modal.classList.contains('hidden')) return;
@@ -1008,6 +1337,7 @@ function handleBackgroundNavigationClick(target) {
     }
 }
 
+// Recalcule toute la frise lorsqu'un changement de taille d'ecran se produit.
 function handleViewportResize() {
     if (isAnimating) return;
 
@@ -1035,16 +1365,21 @@ function handleViewportResize() {
     );
 }
 
+// Branche le bouton "retour" sur la navigation d'un niveau vers le haut.
 backButton.addEventListener('click', goBackOneLevel);
+// Branche le bouton de reinitialisation sur la vue generale.
 resetViewButton.addEventListener('click', resetView);
+// Branche le bouton de fermeture de la modale.
 closeModal.addEventListener('click', closeModalWindow);
 
+// Ferme la modale si l'utilisateur clique sur le fond derriere son contenu.
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         closeModalWindow();
     }
 });
 
+// Gere les clics globaux pour masquer le glossaire ou naviguer en arriere.
 document.addEventListener('click', (e) => {
     const clickedInlineTerm = e.target.closest('.inline-term');
 
@@ -1055,16 +1390,21 @@ document.addEventListener('click', (e) => {
     handleBackgroundNavigationClick(e.target);
 });
 
+// Cache le glossaire lors d'un scroll de page.
 window.addEventListener('scroll', hideTooltipCard);
+// Cache le glossaire lors d'un redimensionnement.
 window.addEventListener('resize', hideTooltipCard);
+// Recalcule le layout complet lors d'un redimensionnement.
 window.addEventListener('resize', handleViewportResize);
 
+// Permet de fermer la modale avec la touche Echap.
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
         closeModalWindow();
     }
 });
 
+// Initialise la frise au chargement avec sa largeur, son rendu et son etat par defaut.
 updateBaseTimelineWidth();
 renderTimeline();
 applyZoom(DEFAULT_ZOOM);

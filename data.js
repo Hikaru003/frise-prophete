@@ -1,7 +1,24 @@
 const glossaryData = {
-    lundi12: {
+    lundi: {
+        title: "Preuve",
+        text: `
+    C’est le Prophète ﷺ lui-même qui a affirmé être né un lundi :
+
+    Ibn ^Abbâs ( ابنعباس ), son cousin, a dit :
+    `,        
+        list: [
+        "Le Prophète ﷺ est né un lundi,",
+        "a reçu la révélation un lundi,",
+        "a fait la hijra un lundi,",
+        "est entré à Médine un lundi,",
+        "et son décès eut lieu un lundi",
+        ]
+    },
+    l12: {
         title: "Divergence",
-        text: "Il y a divergence sur le jour précis :",
+        text: `
+    Il y a divergence sur le jour précis :
+        `,
         list: [
             "le 2",
             "le 8",
@@ -11,63 +28,193 @@ const glossaryData = {
     },
     anneElephant: {
         title: "Pourquoi l'Année de l'Éléphant ?",
-        text: "À cette époque, Abraha, un roi du Yémen, avait fait construire une grande église.\n\nCependant, les gens continuaient à se rendre à la Ka‘ba, à La Mecque. Il décida alors de la détruire.\n\nIl partit avec une armée accompagnée d’éléphants. Mais Allâh lui infligea un châtiment : des oiseaux lancèrent des pierres sur l’armée.\n\nCet événement est mentionné dans le Qurʾān, dans la sourate al-Fīl."
+        text: `
+    À cette époque, Abraha, un roi du Yémen, avait fait construire une grande église.
+
+    Cependant, les gens continuaient à se rendre à la Ka‘ba, à La Mecque. Il décida alors de la détruire.
+
+    Les savants ont donc nommé cette année :
+
+    => l’année de l’Éléphant
+
+    Il partit avec une armée accompagnée d’éléphants. Mais Allâh lui infligea un châtiment : des oiseaux lancèrent des pierres brûlantes sur l’armée.
+
+    Cet événement est mentionné dans le Qurʾān, dans la sourate al-Fīl.
+
+    **Divergences :**
+
+    Certains savants ont dit que la naissance eut lieu après l’année de l’Éléphant :
+        `,
+        list: [
+                "certains : 30 ans après",
+                "d’autres : 40 ans après",
+                "L'avis le plus fort est durant l’année de l’Éléphant"
+        ]
     },
     RabiAwwal: {
-        title: "Rabi^ al-Awwal",
-        text: "Rabi^ al-Awwal est le troisième mois du calendrier lunaire."
+        title: "Rabî^ al-Awwal (ربيع الأول)",
+        text: `
+    Rabî^ al-Awwal (ربيع الأول) est le troisième mois du calendrier lunaire islamique.
+        `
     },
     mecque: {
         title: "La Mecque",
-        text: "Il est né dans une maison située dans la ruelle Zuqâq al-Mudakkak (زقاق المدقّق), proche de la Ka^ba."
+        text: `
+    Il est né dans une maison située dans la ruelle Zuqâq al-Mudakkak (زقاق المدقّق), proche de la Ka^ba.
+
+    Cette maison est devenue plus tard une bibliothèque, aujourd’hui fermée.
+        `
+    },
+    rabialawwal: {
+        title: "Rabî^ al-Awwal (ربيع الأول)",
+        text: "Troisième mois du calendrier lunaire islamique, durant lequel est né le Prophète ﷺ."
+    },
+    aNaissancePere: {
+        title: "Divergence",
+        text: `
+        L’avis le plus fort est que le Prophète ﷺ n’était pas encore né.
+        
+        Cependant certains savants ont dit qu’il avait 2 ans et quelques mois.
+        `
+    },
+    kisra: {
+        title: "Kisrâ (كسرى)",
+        text: "Titre donné aux empereurs de l’Empire perse. A cette époque le Kisrâ était Anû Shirwân (أنوشروان)"
+    },
+    feuPerse: {
+    title: "Le feu des Perses",
+    text: "À cette époque, il y avait des adorateurs du feu. Ils ont dit que le feu avait brûlé durant 1000 ans."
+    },
+    iraq: {
+        title: "^Irâq (العراق)",
+        text: "Région située à l’est de la péninsule arabique, faisant partie de l’Empire perse à l’époque."
+    },
+    busra: {
+        title: "Buṣrâ (بصرى)",
+        text: "Ville du sud de la Syrie actuelle."
+    },
+    iblis: {
+        title: "Iblîs (إبليس)",
+        text: "Nom du diable dans la tradition islamique."
+    },
+    couChameau: {
+        title: "La vision loitaine",
+        text: "La lumière était telle que que sa mère a vu les cous des chameaux à Buṣrâ (بُصرى)"
+    },
+    quraish: {
+        title: "Quraysh (قريش)",
+        text: "Tribu du Prophète ﷺ, vivant à La Mecque."
     },
     thuwayba: {
         title: "Thuwayba",
-        text: "Thuwayba était une esclave affranchie d’Abû Lahab. Elle fut la première mère de lait du Prophète ﷺ bien que moins connu que sa seconde."
+        text: `
+    Thuwayba était une esclave affranchie d’Abû Lahab. Elle fut la première mère de lait du Prophète ﷺ bien que moins connu que sa seconde.
+
+    Elle a allaité :
+
+    • le Prophète ﷺ (durant quelques jours)
+
+    • son oncle Ḥamza (حمزة)
+
+    • Abû Salama al-Makhzûmî ( أبوسلمةالمخزومي )
+
+    • son propre fils Masrûḥ (مسروح)
+        `
     },
     halima: {
         title: "Ḥalīma as-Sa‘diyya",
-        text: "Ḥalīma as-Sa‘diyya appartenait à la tribu des Banū Sa‘d. Elle fut la seconde mère de lait du Prophète ﷺ."
+        text: `
+    Ḥalīma as-Sa‘diyya appartenait à la tribu des Banū Sa‘d. Elle fut la seconde mère de lait du Prophète ﷺ.
+        `
     },
     jibril: {
         title: "Jibrīl",
-        text: "Jibrīl est un ange. Une de ses mission est de transmettre la révélation aux prophètes."
+        text: `
+    Jibrīl est un ange. Une de ses mission est de transmettre la révélation aux prophètes.
+        `
+    },
+    banusaad: {
+        title: "Banû Sa^d ibn Bakr (بنو سعد بن بكر)",
+        text: "Tribu arabe vivant au sud-est de La Mecque dans une région proche."
+    },
+    badou: {
+        title: "Badû (بدو)",
+        text: "Nom donné aux populations vivant dans le désert, en dehors des villes."
+    },
+    maturiteForcePrecoce: {
+        title: "Croissance exceptionnelle du Prophète ﷺ",
+        text: `
+        Ḥalîma a dit que le Prophète ﷺ grandit :
+
+        • en un jour comme un enfant en un mois,
+
+        • en un mois comme un enfant en un an.
+
+        • À un an, il ressemble déjà à un jeune garçon robuste.
+        `
+    },
+    shaytan: {
+        title: "shayṭân (شيطان)",
+        text: "Nom donné au diable dans la tradition islamique."
+    },
+
+    mikail: {
+        title: "Mîkâ'îl (ميكائيل)",
+        text: "Ange chargé de certaines fonctions liées à la subsistance, comme la pluie et la végétation."
     },
     oncles: {
         title: "Oncles",
-        text: "Le Prophète ﷺ avait douze oncles paternels et six tantes paternelles, selon certains savants."
+        text: `
+    Le Prophète ﷺ avait douze oncles paternels et six tantes paternelles, selon certains savants.
+        `
     },
     medine: {
         title: "Médine",
-        text: "À l’époque, Médine s’appelait Yathrib. Après l’Hégire du Prophète ﷺ, elle fut appelée Médine."
+        text: `
+    À l’époque, Médine s’appelait Yathrib. Après l’Hégire du Prophète ﷺ, elle fut appelée Médine.
+        `
     },
     abwa: {
         title: "Al-Abwā’",
-        text: "Al-Abwā’ est un lieu situé entre La Mecque et Médine. C’est là que se trouve la tombe de ^Amina bint Wahb, qu’il est possible de visiter."
+        text: `
+    Al-Abwā’ est un lieu situé entre La Mecque et Médine. C’est là que se trouve la tombe de ^Amina bint Wahb, qu’il est possible de visiter.
+        `
     },
     abdulmuttalib: {
         title: "^Abd al-Muṭṭalib",
-        text: "Grand-père du Prophète ﷺ qui était le chef de la tribu."
+        text: `
+    Grand-père du Prophète ﷺ qui était le chef de la tribu.
+        `
     },
     abutalib: {
         title: "Abū Ṭālib",
-        text: "Oncle paternel du Prophète ﷺ et père de ^ʿAlī. Il s’occupa de lui après la mort de ^Abd al-Muṭṭalib et le protégea jusqu'à sa mort alors qu'il ne se converti jamais à l'islam."
+        text: `
+    Oncle paternel du Prophète ﷺ et père de ^ʿAlī. Il s’occupa de lui après la mort de ^Abd al-Muṭṭalib et le protégea jusqu'à sa mort alors qu'il ne se converti jamais à l'islam.
+        `
     },
     sham: {
         title: "Shâm",
-        text: "Le Shâm désigne une région comprenant notamment la Syrie, la Palestine, la Jordanie et le Liban."
+        text: `
+    Le Shâm désigne une région comprenant notamment la Syrie, la Palestine, la Jordanie, le Liban et une partie de l'Irak.
+        `
     },
     bahira: {
         title: "Baḥīrā",
-        text: "Baḥīrā était un moine qui avait lu dans les anciens livres et connaissait les signes du dernier Prophète."
+        text: `
+    Baḥīrā était un moine qui avait lu dans les anciens livres et connaissait les signes du dernier Prophète.
+        `
     },
     khadija: {
         title: "Khadīja bint Khuwaylid",
-        text: "Khadīja était la femme la plus noble de La Mecque, elle était très riche. Elle avait déjà été mariée mais avait divorcer avant d’épouser le Prophète ﷺ."
+        text: `
+    Khadīja était la femme la plus noble de La Mecque, elle était très riche. Elle avait déjà été mariée mais avait divorcer avant d’épouser le Prophète ﷺ.
+        `
     },
     maysara: {
         title: "Maysara",
-        text: "Maysara était le serviteur de Khadīja."
+        text: `
+    Maysara était le serviteur de Khadīja.
+        `
     }
 };
 
@@ -79,7 +226,15 @@ const eventsData = [
         title: "Naissance",
         content: {
             subtitle: "Naissance du Prophète ﷺ",
-            text: "La naissance du Prophète ﷺ a eu lieu un [term:lundi12|lundi 12]. Elle eut lieu durant [term:anneElephant|l'Année de l'Éléphant]. Son mois de naissance est [term:RabiAwwal|Rabi^ al-Awwal]. Il est né à [term:mecque|La Mecque]."
+            text: `
+    La naissance du Prophète ﷺ a eu lieu un [term:lundi|lundi] [term:l12|12]. 
+
+    Elle eut lieu durant [term:anneElephant|l'Année de l'Éléphant]. 
+
+    Son mois de naissance est [term:RabiAwwal|Rabi^ al-Awwal]. 
+
+    Il est né à [term:mecque|La Mecque].
+            `
         }
     },
     {
@@ -90,19 +245,177 @@ const eventsData = [
         title: "Décès de son père",
         content: {
             subtitle: "Avant sa naissance",
-            text: "Avant sa naissance, son père, ^Abdullah, décéda alors qu’il était encore dans le ventre de sa mère, ^Amina bint Wahb. Durant la grossesse de ^Amina, ^Abdullah était parti vers le Shâm avec sa tribu pour commercer. Sur le chemin du retour, il tomba malade à proximité de Médine et décida d’y rester, laissant ses compagnons poursuivre leur route. Son père, ^Abd al-Muttalib, fut surpris qu’il ait été laissé derrière. Il envoya alors l’un de ses fils pour prendre de ses nouvelles, mais celui-ci découvrit qu’il était déjà décédé."
+            text: `
+    [term:aNaissancePere|Avant sa naissance], son père, ^Abdullâh (عبد الله), décéda alors qu’il était encore dans le ventre de sa mère, Âmina fille de Wahb (آمنة بنت وهب).
+
+    Durant la grossesse de Âmina (آمنة), ^Abdullâh (عبد الله) était parti vers le Shâm (الشام) avec sa tribu pour commercer.
+
+    Sur le chemin du retour, il tomba malade à proximité de Médine (المدينة) et décida d’y rester, laissant ses compagnons poursuivre leur route.
+
+    Son père, ^Abd al-Muttalib (عبد المطلب), fut surpris qu’il ait été laissé derrière. Il envoya alors l’un de ses fils pour prendre de ses nouvelles, mais celui-ci découvrit qu’il était déjà décédé à l'âge de 25 ans.
+            `
         }
     },
     {
-        id: "allaitement",
+        id: "naissance_allaitement",
         parent: "naissance",
         type: "period",
         start: -53,
         end: -49,
-        title: "Allaitement",
+        title: "Naissance et Allaitement",
         content: {
             subtitle: "Période de l’enfance",
-            text: "Après sa naissance, il resta d’abord avec sa mère, ^Amina bint Wahb. Selon une coutume de l’époque, des femmes des tribus voisines prenaient en charge les nourrissons afin qu’ils grandissent dans un environnement plus sain. Il eut ainsi deux mères de lait : [term:thuwayba|Thuwayba], puis [term:halima|Ḥalīma as-Sa‘diyya], de la tribu des Banū Sa‘d. La durée habituelle de l’allaitement était de deux ans. Cependant, Ḥalīma, ayant constaté une bénédiction particulière, demanda à le garder plus longtemps. Il resta ainsi auprès d’elle jusqu’à l’âge de quatre ans. Durant cette période, un événement marquant eut lieu : l’ange [term:jibril|Jibrīl] ouvrit sa poitrine et purifia son cœur. Lorsque cela fut rapporté à Ḥalīma, elle prit peur et décida de le ramener à sa mère."
+            text: `
+    Après sa naissance, il resta d’abord avec sa mère, Âmina fille de Wahb (آمنة بنت وهب).
+
+    Selon une coutume de l’époque, des femmes des tribus voisines prenaient en charge les nourrissons afin qu’ils grandissent dans un environnement plus sain.
+
+    Il eut ainsi deux mères de lait : [term:thuwayba|Thuwayba], puis [term:halima|Ḥalîma as-Sa^diyya (حليمة السعدية)], de la tribu des Banû Sa^d (بنو سعد).
+
+    La durée habituelle de l’allaitement était de deux ans. Cependant, Ḥalîma (حليمة), ayant constaté une bénédiction particulière, demanda à le garder plus longtemps. Il resta ainsi auprès d’elle jusqu’à l’âge de quatre ans.
+
+    Durant cette période, un événement marquant eut lieu : l’ange [term:jibril|Jibrîl (جبريل)] ouvrit sa poitrine et purifia son cœur.
+
+    Lorsque cela fut rapporté à Ḥalîma (حليمة), elle prit peur et décida de le ramener à sa mère.
+            `
+        }
+    },
+        {
+        id: "naissance_detail",
+        parent: "naissance_allaitement",
+        type: "point",
+        year: -53,
+        title: "Naissance",
+        content: {
+            subtitle: "Période de l’enfance",
+    text: `
+    La naissance du Prophète ﷺ fut accompagnée de signes particuliers.
+
+    Sa mère, Âmina fille de Wahb (آمنة بنت وهب), ne ressentit pas les effets habituels de la grossesse et reçut une annonce concernant l’enfant qu’elle portait.
+
+    Au moment de sa naissance, plusieurs événements marquants eurent lieu, comme des signes visibles dans le monde et l’apparition d’une lumière s’étendant jusqu’au [term:sham|Shâm (الشام)].
+
+    Ces événements marquèrent la venue du dernier Prophète ﷺ.
+    `,
+    details: `
+    La naissance du Prophète ﷺ fut entourée de signes particuliers.
+
+    [term:ibnsaad|Ibn Sa^d (ابن سعد)] rapporte qu’Âmina fille de Wahb (آمنة بنت وهب) ne ressentit pas les effets habituels de la grossesse. Elle disait ne pas avoir ressenti de lourdeur comme les autres femmes, au point de douter elle-même de sa grossesse.
+
+    Elle raconta qu’une personne lui apparut entre l’éveil et le sommeil et lui dit qu’elle portait le maître de cette communauté et son Prophète. Cette annonce lui apporta la certitude qu’elle était enceinte.
+
+    Plus tard, il lui fut dit de prononcer une invocation pour protéger l’enfant :
+    « Ou^îdhouhou bi l-Wâḥidi ṣ-Ṣamad min sharri koulli ḥâsid »
+    (أعيذه بالواحد الصمد من شر كل حاسد),
+    c’est-à-dire : je recherche pour lui la protection par Celui qui est Unique, Celui de Qui l’on a besoin dans toutes les situations, contre le mal de tout envieux.
+
+    Il rapporte également d’après Muḥammad Ibnou ^Oumar al-’Aslamiyy (محمد بن عمراألسلمي)  que Âmina (آمنة) et ^Abdullâh ibn ^Abd al-Muṭṭalib (عبد الله بن عبد المطلب) n’eurent pas d’autre enfant que le Prophète ﷺ.
+
+    Parmi les signes qui accompagnèrent sa naissance :
+
+    • Le palais de [term:kisra|Kisrâ (كسرى)], en [term:iraq|^Irâq (العراق)], trembla et quatorze de ses balcons s’effondrèrent.
+
+    • Le [term:feuPerse|feu des Perses] s’éteignit après avoir brûlé pendant de longues années.
+
+    • La lagune de [term:sawa|Sâwa (ساوة)] s’assécha.  
+
+    D’autres signes furent également mentionnés :
+
+    • [term:iblis|Iblîs (إبليس)] poussa un cri, semblable à celui qu’il avait poussé lors de sa malédiction  
+
+    Au moment de l’accouchement, Âmina (آمنة) mit au monde le Prophète ﷺ.
+
+    Il naquit dans et se retrouvé agenouillé, levant la tête vers le ciel.
+
+    Une lumière sortit avec lui et [term:couChameau|illumina] jusqu’aux palais de [term:busra|Buṣrâ (بصرى)].
+    `
+        }
+    },
+        {
+        id: "halima",
+        parent: "naissance_allaitement",
+        type: "period",
+        start: -53,
+        end: -49,
+        title: "Ḥalîma as-Sa^diyya",
+        content: {
+            subtitle: "Allaitement chez Banû Sa^d",
+    text: `
+    Après avoir été allaité quelques jours par [term:thuwayba|Thuwayba (ثويبة)], le Prophète ﷺ fut confié à [term:halima|Ḥalîma as-Sa^diyya (حليمة السعدية)], de la tribu des [term:banusaad|Banû Sa^d ibn Bakr (بنو سعد بن بكر)].
+
+    Au départ, elle hésita à le prendre car il était orphelin de père. Mais dès qu’elle le prit avec elle, de nombreux signes de bénédiction apparurent dans sa vie : abondance de lait, amélioration de leurs conditions et prospérité de leurs troupeaux.
+
+    Le Prophète ﷺ grandit rapidement et resta plusieurs années auprès d’elle, jusqu’à ce qu’un événement marquant pousse sa famille de lait à le ramener à sa mère.
+    `,
+    details: `
+    Après avoir été allaité quelques jours par [term:thuwayba|Thuwayba (ثويبة)], le Prophète ﷺ fut confié à [term:halima|Ḥalîma as-Sa^diyya (حليمة السعدية)], issue de la tribu des [term:banusaad|Banû Sa^d ibn Bakr (بنو سعد بن بكر)].
+
+    À cette époque, il était courant que des femmes vivant dans les campagnes, appelées [term:badou|Badû (بدو)], viennent à La Mecque pour prendre des nourrissons et les élever dans un environnement plus rude afin de les renforcer et améliorer sa santé.
+
+    L’année durant laquelle Ḥalîma se rendit à La Mecque fut marquée par une grande sécheresse. Les ressources étaient faibles, ses animaux ne produisaient presque pas de lait, et son propre enfant souffrait de la faim.
+
+    Lorsque les femmes se virent proposer le Prophète ﷺ, elles refusèrent de le prendre car il était orphelin de père et elles espéraient une rémunération plus importante de la part du père.
+
+    Ḥalîma, n’ayant trouvé aucun enfant, décida finalement de le prendre. Ce choix, fait par nécessité, fut en réalité une grande bénédiction pour elle.
+
+    Dès qu’elle le prit dans ses bras, elle constata une abondance de lait. Le Prophète ﷺ put boire jusqu’à satiété, ainsi que son propre enfant. Sa chamelle, qui auparavant ne produisait rien, donna elle aussi du lait en abondance.
+
+    Sur le chemin du retour, son ânesse, auparavant faible, devint rapide au point de devancer le reste du convoi.
+
+    Une fois arrivée dans la région des Banû Sa^d, les bénédictions continuèrent : ses troupeaux devenaient gras et produisaient du lait en abondance, contrairement à ceux des autres.
+
+    Le Prophète ﷺ grandissait rapidement, de manière inhabituelle, au point d’atteindre une force et une [term:maturiteForcePrecoce|maturité précoces].
+
+    Après 2 ans, Ḥalîma et son mari le ramenèrent à sa mère, mais insistèrent pour le garder plus longtemps, en invoquant la crainte des maladies de La Mecque, alors qu’ils avaient en réalité constaté les bénédictions liées à sa présence.
+
+    Âmina (آمنة) accepta, et il resta encore auprès d’eux pendant 2 ans.
+
+    2 ans plus tard, l'événement des anges se produisit, ce qui inquiéta Ḥalîma et son mari. Par crainte qu'il ait été atteint d'un mal, ils décidèrent alors de le ramener définitivement à sa mère.
+    `
+        }
+    },
+    {
+    id: "ouverturePoitrine",
+    parent: "halima",
+    type: "point",
+    year: -49,
+    title: "Evènement des anges",
+    content: {
+        subtitle: "Intervention des anges",
+        text: `
+    Durant son enfance chez [term:halima|Ḥalîma as-Sa^diyya (حليمة السعدية)], le Prophète ﷺ fut témoin d’un événement marquant.
+
+    Deux anges vinrent à lui, [term:jibril|Jibrîl (جبريل)] et [term:mikail|Mîkâ'îl (ميكائيل)], ils l’allongèrent et ouvrirent sa poitrine. Ils purifièrent son cœur et retirèrent ce qui aurait pu être une part pour le [term:shaytan|shayṭân (شيطان)].
+
+    Après cela, ils refermèrent sa poitrine.
+
+    Cet événement inquiéta sa famille de lait, qui décida de le ramener à sa mère.
+            `,
+        details: `
+    Alors que le Prophète ﷺ vivait encore chez [term:halima|Ḥalîma as-Sa^diyya (حليمة السعدية)], il se trouvait un jour à l’extérieur avec son frère de lait, derrière les habitations, près du troupeau.
+
+    Soudain, deux hommes vêtus de blanc vinrent à lui. En réalité, il s’agissait de deux anges : [term:jibril|Jibrîl (جبريل)] et [term:mikail|Mîkâ'îl (ميكائيل)].
+    
+    Ils s’approchèrent de lui, l’allongèrent au sol, puis lui ouvrirent la poitrine.
+
+    L’ange [term:jibril|Jibrîl (جبريل)] lava alors le cœur du Prophète ﷺ et en retira un caillot de sang. Il dit ensuite : « C’est là que le [term:shaytan|shayṭân (شيطان)] aurait pu espérer de toi. »
+
+    Après cela, les anges refermèrent sa poitrine. Une cicatrice resta visible à l’endroit de l’ouverture.
+
+    Puis l’un des deux anges dit à l’autre de le comparer en force. Il fut alors constaté que le Prophète ﷺ avait plus de force que cent hommes de sa communauté. Cela lui donna une grande force.
+
+    Pendant ce temps, son frère de lait avait assisté à la scène. Pris de peur, il courut aussitôt prévenir Ḥalîma et son mari.
+
+    Il leur raconta que deux hommes étaient venus auprès de son frère qurashiyy, qu’ils l’avaient allongé et qu’ils lui avaient ouvert la poitrine.
+
+    Ḥalîma et son mari sortirent immédiatement, effrayés par ce qu’ils venaient d’entendre. Lorsqu’ils arrivèrent auprès du Prophète ﷺ, ils le trouvèrent debout, le visage changé et le teint pâle.
+
+    Ils le prirent alors dans leurs bras et lui demandèrent ce qui s’était passé. Il leur raconta que deux hommes étaient venus à lui, qu’ils l’avaient allongé et qu’ils lui avaient ouvert la poitrine, sans qu’il sache précisément ce qu’ils avaient fait ensuite.
+
+    Le mari de Ḥalîma craignit alors qu’un mal n’atteigne l’enfant. Il dit qu’il valait mieux le ramener à sa famille avant qu’il n’arrive ce qu’ils redoutaient.
+
+    Ḥalîma et son mari décidèrent donc de le reconduire auprès de sa mère, Âmina (آمنة).
+            `
         }
     },
     {
@@ -113,8 +426,16 @@ const eventsData = [
         end: -47,
         title: "Chez sa mère",
         content: {
-            subtitle: "A 6 ans",
-            text: "Il resta avec sa mère, ^Amina bint Wahb, de 4 ans jusqu’à l’âge de six ans. Elle entreprit un voyage vers [term:medine|Médine] afin de rendre visite aux [term:oncles|oncles] maternels de son père. Sur le chemin du retour, elle tomba malade. Elle décéda à un endroit appelé [term:abwa|Al-Abwā’], situé entre La Mecque et Médine."
+            subtitle: "À 6 ans",
+            text: `
+    Il resta avec sa mère, Âmina fille de Wahb (آمنة بنت وهب), de l’âge de quatre ans jusqu’à six ans.
+
+    Elle entreprit un voyage vers [term:medine|Médine (المدينة)] afin de rendre visite aux [term:oncles|oncles] maternels de son père.
+
+    Sur le chemin du retour, elle tomba malade.
+
+    Elle décéda à un endroit appelé [term:abwa|Al-Abwâ' (الأبواء)], situé entre La Mecque et Médine.
+            `
         }
     },
     {
@@ -126,19 +447,29 @@ const eventsData = [
         title: "Chez son grand-père",
         content: {
             subtitle: "De 6 à 8 ans",
-            text: "Après le décès de sa mère, son grand-père, [term:abdulmuttalib|^Abd al-Muṭṭalib], prit sa charge et s’occupa de lui. Il resta auprès de lui jusqu’à l’âge de huit ans. À la mort de son grand-père, sa prise en charge fut confiée à son oncle paternel, [term:abutalib|Abū Ṭālib]."
+            text: `
+    Après le décès de sa mère, son grand-père, [term:abdulmuttalib|^Abd al-Muṭṭalib (عبد المطلب)], prit sa charge et s’occupa de lui.
+
+    Il resta auprès de lui jusqu’à l’âge de huit ans.
+
+    À la mort de son grand-père, sa prise en charge fut confiée à son oncle paternel, [term:abutalib|Abû Ṭâlib (أبو طالب)].
+            `
         }
     },
     {
         id: "chezOncle",
-        parent: "naissance",
+        parent: "avantRevelation",
         type: "period",
         start: -45,
         end: -28,
         title: "Chez son oncle",
         content: {
-            subtitle: "Jeunesse sous la protection de Abū Ṭālib",
-            text: "Après le décès de son grand-père, il fut pris en charge par son oncle paternel, [term:abutalib|Abū Ṭālib]. Il grandit sous sa protection durant de nombreuses années."
+            subtitle: "Jeunesse sous la protection de Abû Ṭâlib",
+            text: `
+    Après le décès de son grand-père, il fut pris en charge par son oncle paternel, [term:abutalib|Abû Ṭâlib (أبو طالب)].
+
+    Il grandit sous sa protection durant de nombreuses années.
+            `
         }
     },
     {
@@ -148,8 +479,57 @@ const eventsData = [
         year: -41,
         title: "Voyage au Shâm",
         content: {
-            subtitle: "Rencontre avec Baḥīrā",
-            text: "À l’âge de douze ans, il accompagna son oncle [term:abutalib|Abū Ṭālib] lors d’un voyage vers le [term:sham|Shâm]. Durant ce voyage, ils rencontrèrent un moine nommé [term:bahira|Baḥīrā], qui reconnut en lui des signes annonçant le dernier Prophète. Lorsque Abū Ṭālib affirma qu’il s’agissait de son fils, Baḥīrā répondit que le dernier Prophète devait être orphelin de père. Il confirma alors qu’il était son neveu. Baḥīrā lui conseilla de le ramener rapidement, avertissant que certains, notamment parmi les juifs, pourraient chercher à lui nuire s’ils reconnaissaient ces signes. Ils ont suivi son conseil et sont rentrés."
+            subtitle: "Rencontre avec Baḥîrâ",
+            text: `
+    À l’âge de douze ans, il accompagna son oncle [term:abutalib|Abû Ṭâlib (أبو طالب)] lors d’un voyage vers le [term:sham|Shâm (الشام)].
+
+    Durant ce voyage, ils rencontrèrent un moine nommé [term:bahira|Baḥîrâ (بحيرا)], qui reconnut en lui des signes annonçant le dernier Prophète.
+
+    Lorsque Abû Ṭâlib (أبو طالب) affirma qu’il s’agissait de son fils, Baḥîrâ (بحيرا) répondit que le dernier Prophète devait être orphelin de père. Il confirma alors qu’il était son neveu.
+
+    Baḥîrâ (بحيرا) lui conseilla de le ramener rapidement, avertissant que certains, notamment parmi les juifs, pourraient chercher à lui nuire s’ils reconnaissaient ces signes.
+
+    Ils suivirent son conseil et rentrèrent.
+            `,
+    details: `
+    À l’âge de douze ans, le Prophète ﷺ accompagna son oncle Abû Ṭâlib (أبو طالب) lors d’un voyage commercial vers le Shâm (الشام). 
+
+    À cette époque, les Quraysh (قريش) avaient l’habitude d’effectuer deux grands voyages par an : l’un vers le Shâm, et l’autre vers le Yémen (اليمن). Ce voyage fut le premier du Prophète ﷺ vers cette région.
+
+    Le Shâm désignait alors une vaste zone comprenant notamment la Syrie actuelle, la Jordanie, la Palestine, le Liban ainsi qu’une partie de l’Irak.
+
+    Au cours de ce voyage, ils rencontrèrent un moine nommé Baḥîrâ (بحيرا). Cet homme possédait une connaissance des anciens Livres, dans lesquels étaient mentionnés les signes du dernier Prophète. En effet, chaque Prophète avant lui avait annoncé sa venue.
+
+    Parmi les signes qu’il connaissait, il y avait notamment la présence du sceau de la prophétie entre ses épaules, ainsi que des signes visibles comme le fait qu’un nuage le suivait.
+
+    Baḥîrâ vivait à l’écart des gens et observait les caravanes qui passaient. Un jour, il remarqua que la caravane d’Abû Ṭâlib (أبو طالب) était couverte par un nuage, ce qui attira immédiatement son attention.
+
+    Contrairement à son habitude, il envoya quelqu’un inviter toute la caravane à partager un repas, afin de vérifier ce qu’il avait observé.
+
+    Lorsque les gens arrivèrent, le Prophète ﷺ n’était pas présent, car il était resté en arrière pour surveiller les biens. Baḥîrâ demanda alors : « Est-ce que tout le monde est présent ? »
+
+    Ils répondirent que oui, puis mentionnèrent qu’un jeune garçon était resté en arrière. Baḥîrâ insista pour qu’il soit lui aussi amené.
+
+    Lorsqu’il le vit, il observa attentivement ses traits et reconnut en lui les signes qu’il connaissait. Il alla jusqu’à constater le sceau de la prophétie, ce qui confirma pour lui qu’il s’agissait du dernier Prophète.
+
+    Il demanda alors : « Où est son père ? »
+
+    Abû Ṭâlib (أبو طالب) répondit : « Je suis son père. »
+
+    Baḥîrâ répondit : « Non, selon ce que je sais, son père n’est pas vivant. »
+
+    Abû Ṭâlib (أبو طالب) corrigea alors : « Il est mon neveu. »
+
+    Suite à cela, Baḥîrâ mit en garde Abû Ṭâlib (أبو طالب) en lui disant de ne pas poursuivre le voyage et de retourner rapidement.
+
+    Il l’avertit que certains, notamment parmi les juifs, pourraient chercher à lui nuire s’ils reconnaissaient ces signes.
+
+    En effet, les Banû Isrâ’îl (بنو إسرائيل), descendants de Ya^qûb (يعقوب), attendaient la venue du dernier Prophète et pensaient qu’il serait issu de leur peuple.
+
+    S’ils apprenaient qu’il était arabe, ils pourraient rejeter sa venue et chercher à lui nuire.
+
+    Par précaution, Abû Ṭâlib (أبو طالب) suivit ce conseil et décida de retourner à La Mecque sans poursuivre le voyage vers le Shâm (الشام).
+    `
         }
     },
         {
@@ -166,7 +546,9 @@ const eventsData = [
         title: "Mariage avec Khadīja",
         content: {
             subtitle: "À l’âge de 25 ans",
-            text: "À l’âge de vingt-cinq ans, il fut chargé par [term:khadija|Khadīja bint Khuwaylid] de mener une expédition commerciale vers le [term:sham|Shâm], accompagné de son serviteur [term:maysara|Maysara]. Durant ce voyage, Maysara observa chez lui une grande bénédiction ainsi qu’un comportement exemplaire. À leur retour, il rapporta cela à Khadīja. Ayant déjà entendu parler de sa véracité et de son honnêteté, Khadīja exprima le souhait de se marier avec lui. Le mariage fut alors conclu. Le Prophète ﷺ avait vingt-cinq ans, tandis que Khadīja en avait quarante."
+            text: `
+À l’âge de vingt-cinq ans, il fut chargé par [term:khadija|Khadīja bint Khuwaylid] de mener une expédition commerciale vers le [term:sham|Shâm], accompagné de son serviteur [term:maysara|Maysara]. Durant ce voyage, Maysara observa chez lui une grande bénédiction ainsi qu’un comportement exemplaire. À leur retour, il rapporta cela à Khadīja. Ayant déjà entendu parler de sa véracité et de son honnêteté, Khadīja exprima le souhait de se marier avec lui. Le mariage fut alors conclu. Le Prophète ﷺ avait vingt-cinq ans, tandis que Khadīja en avait quarante.
+            `
         }
     },
     {
@@ -437,9 +819,9 @@ Il fit construire la mosquée, établit la fraternité entre les musulmans et co
         content: {
             subtitle: "Entre Muhājirūn et Anṣār",
             text: `
-    Le Prophète ﷺ établit un lien de fraternité entre les émigrés de La Mecque et les habitants de Médine.
+Le Prophète ﷺ établit un lien de fraternité entre les émigrés de La Mecque et les habitants de Médine.
 
-    Ils partagèrent leurs biens et s’entraidèrent pour construire la nouvelle communauté.
+Ils partagèrent leurs biens et s’entraidèrent pour construire la nouvelle communauté.
             `
         }
     },
@@ -452,9 +834,9 @@ Il fit construire la mosquée, établit la fraternité entre les musulmans et co
         content: {
             subtitle: "Première grande victoire",
             text: `
-    La bataille de Badr fut la première grande confrontation entre les musulmans et les Quraysh.
+La bataille de Badr fut la première grande confrontation entre les musulmans et les Quraysh.
 
-    Malgré leur faible nombre, les musulmans remportèrent la victoire.
+Malgré leur faible nombre, les musulmans remportèrent la victoire.
             `
         }
     },
@@ -467,9 +849,9 @@ Il fit construire la mosquée, établit la fraternité entre les musulmans et co
         content: {
             subtitle: "Une épreuve difficile",
             text: `
-    Lors de la bataille de Uhud, les musulmans subirent une épreuve après avoir désobéi à certaines consignes.
+Lors de la bataille de Uhud, les musulmans subirent une épreuve après avoir désobéi à certaines consignes.
 
-    Cet événement fut une leçon importante pour la communauté.
+Cet événement fut une leçon importante pour la communauté.
             `
         }
     },
@@ -482,9 +864,9 @@ Il fit construire la mosquée, établit la fraternité entre les musulmans et co
         content: {
             subtitle: "Défense de Médine",
             text: `
-    Face à une coalition ennemie, les musulmans creusèrent un fossé autour de Médine pour se défendre.
+Face à une coalition ennemie, les musulmans creusèrent un fossé autour de Médine pour se défendre.
 
-    Cette stratégie permit de protéger la ville.
+Cette stratégie permit de protéger la ville.
             `
         }
     },
@@ -497,9 +879,9 @@ Il fit construire la mosquée, établit la fraternité entre les musulmans et co
         content: {
             subtitle: "Accord avec Quraysh",
             text: `
-    Un traité de paix fut conclu entre les musulmans et les Quraysh.
+Un traité de paix fut conclu entre les musulmans et les Quraysh.
 
-    Bien qu’il semble désavantageux au départ, il permit une grande expansion de l’Islām.
+Bien qu’il semble désavantageux au départ, il permit une grande expansion de l’Islām.
             `
         }
     },
@@ -512,9 +894,9 @@ Il fit construire la mosquée, établit la fraternité entre les musulmans et co
         content: {
             subtitle: "Retour dans la ville natale",
             text: `
-    Le Prophète ﷺ entra à La Mecque avec une armée importante.
+Le Prophète ﷺ entra à La Mecque avec une armée importante.
 
-    La ville fut conquise sans grande résistance, et de nombreuses personnes embrassèrent l’Islām.
+La ville fut conquise sans grande résistance, et de nombreuses personnes embrassèrent l’Islām.
             `
         }
     },
@@ -527,35 +909,24 @@ Il fit construire la mosquée, établit la fraternité entre les musulmans et co
         content: {
             subtitle: "Dernier grand événement",
             text: `
-    Le Prophète ﷺ accomplit son dernier pèlerinage.
+Le Prophète ﷺ accomplit son dernier pèlerinage.
 
-    Il y prononça un discours important résumant les principes de l’Islām.
+Il y prononça un discours important résumant les principes de l’Islām.
             `
         }
     },
     {
         id: "deces",
-        parent: "periodeMedinoise",
         type: "point",
         year: 11,
         title: "Décès",
         content: {
             subtitle: "Fin de sa mission",
             text: `
-    Le Prophète ﷺ tomba malade puis décéda à Médine.
+Le Prophète ﷺ tomba malade puis décéda à Médine.
 
-    Il fut enterré dans la maison de [term:aisha|ʿĀʾisha].
+Il fut enterré dans la maison de [term:aisha|ʿĀʾisha].
             `
-        }
-    },
-    {
-        id: "mort",
-        type: "point",
-        year: 11,
-        title: "Mort",
-        content: {
-            subtitle: "Sa mort",
-            text: "Info sur sa Mort"
         }
     }
 ];
