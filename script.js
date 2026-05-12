@@ -523,6 +523,20 @@ function hasChildren(eventId) {
     return getChildren(eventId).length > 0;
 }
 
+// Retourne tous les descendants d'un evenement, quel que soit leur niveau.
+function getDescendants(eventId) {
+    const descendants = [];
+    const stack = [...getChildren(eventId)];
+
+    while (stack.length > 0) {
+        const child = stack.pop();
+        descendants.push(child);
+        stack.push(...getChildren(child.id));
+    }
+
+    return descendants;
+}
+
 // Calcule la profondeur hierarchique d'un evenement dans l'arbre.
 function getLevel(event) {
     let level = 0;
@@ -614,6 +628,32 @@ function getEventSpanPercent(event) {
     return Math.max(endPercent - startPercent, 0);
 }
 
+// Etend la zone de focus d'un evenement pour inclure toute sa branche descendante.
+function getFocusBoundsForEvent(event) {
+    const relatedEvents = [event, ...getDescendants(event.id)];
+    let minYear = Infinity;
+    let maxYear = -Infinity;
+
+    relatedEvents.forEach(relatedEvent => {
+        minYear = Math.min(minYear, getEventStartYear(relatedEvent));
+        maxYear = Math.max(maxYear, getEventEndYear(relatedEvent));
+    });
+
+    return { startYear: minYear, endYear: maxYear };
+}
+
+// Convertit les bornes de focus en largeur utile sur la frise.
+function getFocusSpanPercentForEvent(event) {
+    const { startYear, endYear } = getFocusBoundsForEvent(event);
+    return Math.max(yearToPercent(endYear) - yearToPercent(startYear), 0);
+}
+
+// Calcule le centre horizontal de la zone a garder visible.
+function getFocusCenterPercentForEvent(event) {
+    const { startYear, endYear } = getFocusBoundsForEvent(event);
+    return yearToPercent((startYear + endYear) / 2);
+}
+
 // Mesure l'ecart chronologique entre deux evenements consecutifs.
 function getGapAfterEventInYears(previousEvent, nextEvent) {
     return getEventStartYear(nextEvent) - getEventEndYear(previousEvent);
@@ -621,11 +661,11 @@ function getGapAfterEventInYears(previousEvent, nextEvent) {
 
 // Determine le niveau de zoom le plus adapte pour focaliser un evenement.
 function getFocusZoomForEvent(event) {
-    if (getEventType(event) === 'point') {
+    const spanPercent = getFocusSpanPercentForEvent(event);
+
+    if (getEventType(event) === 'point' && spanPercent <= 0) {
         return POINT_FOCUS_ZOOM;
     }
-
-    const spanPercent = getEventSpanPercent(event);
 
     if (spanPercent <= 0) {
         return MAX_PERIOD_ZOOM;
@@ -1286,7 +1326,7 @@ function focusOnEvent(eventId) {
     updateEventsState();
     updateButtons();
 
-    const targetPosition = getEventCenterPercent(event);
+    const targetPosition = getFocusCenterPercentForEvent(event);
     const targetZoom = getFocusZoomForEvent(event);
     const targetScrollLeft = getScrollLeftForPosition(targetPosition, targetZoom);
 
